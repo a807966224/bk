@@ -21,7 +21,7 @@ description: >- # this means to ignore newlines until "baseurl:"
   the parents of the family, 
   the woman in his arms, 
   the brothers around them.
-baseurl: "/" # the subpath of your site, e.g. /blog
+baseurl: "" # the subpath of your site, e.g. /blog
 url: "" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: jekyllrb
 github_username:  jekyll
