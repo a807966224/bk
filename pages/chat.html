@@ -4,4 +4,17 @@ title: 留言板
 css: [common.css]
 js: [common.js]
 ---
-<div id="gitalk-container"></div>
+<div id="gitmentContainer"></div>
+<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+var gitment = new Gitment({
+    owner: '807966224@qq.com',
+    repo: 'https://github.com/a807966224/a807966224.github.io',
+    oauth: {
+        client_id: '86de3a763db76425e2f6',
+        client_secret: '4dab7e678cd58693a4116d356aca0a0dd80c060b',
+    },
+});
+gitment.render('gitmentContainer');
+</script>
