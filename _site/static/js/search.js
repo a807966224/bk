@@ -2,6 +2,16 @@ function search() {
 var data = [
 
 {
+"title" : "Hello World",
+"time" : "2018/01/31",
+"categories":"Hello World",
+"url" : "/posts/2018/01/31/hello-world.html"
+}
+
+,
+
+
+{
 "title" : "主题预览",
 "time" : "2015/01/01",
 "categories":"jekyll",
