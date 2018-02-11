@@ -6,9 +6,9 @@
 
 html {
     font: 400 16px/1.7 "Microsoft JhengHei", sans-serif;
-    background-color: #fff;
+    background-color: black;
     min-height: 100%;
-    color: #444;
+    color: white;
 }
 
 /*滚动条样式*/
@@ -100,7 +100,7 @@ body {
 }
 
 #header .title a{
-    color: #111;
+    color: #fff;
     text-decoration: none;
     cursor: auto;
 }
@@ -126,14 +126,14 @@ body {
 }
 
 #header .nav ul li a{
-    color: #111;
+    color: #FFFFFF;
     word-wrap: break-word;
     text-decoration: underline;
     cursor: auto;
 }
 
 #header .nav  ul li a:hover{
-    color: #555;
+    color: #FFFACD;
 }
 
 #header .menu-tool{
@@ -187,7 +187,7 @@ body {
     }
 
     #header .nav ul{
-        background-color: white;
+        background-color: black;
         min-width: 100px;
         box-shadow: 0 1px 3px rgba(0,0,0,.12),0 1px 2px rgba(0,0,0,.24);
         list-style: none;
@@ -214,8 +214,8 @@ body {
     }
 
     #header .nav ul li a:hover{
-        color: #111;
-        background-color: #EEE;
+        color: #FFFACD;
+        background-color: #EEE9E9;
     }
 }
 
@@ -223,12 +223,12 @@ body {
 footer{
     margin-top: 50px;
     padding-bottom: 10px;
-    color: #888;
+    color: #828282;
     font-size: 13px;
 }
 
 footer a{
-    color: #111;
+    color: #87CEFA;
     text-decoration: underline;
 }
 /*--回到顶部--*/

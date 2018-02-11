@@ -2,12 +2,15 @@
     margin-bottom: 30px;
 }
 #searchbox input{
+    background: #303030;
     height: 35px;
     line-height: 35px;
     border: none;
     outline: none;
-    border-bottom: 1px solid rgba(200, 200, 200, 0.8);
+    border-bottom: 1px solid rgba(107, 89, 89, 0.8);
     width: 100%;
+    padding-left: 10px;
+    color: #44b4cc;
 }
 #searchbox input:focus{
     border-bottom: 1px solid black;
@@ -31,20 +34,35 @@
 }
 
 #searchlist li time {
-    color: #666;
+    color: #ccff33;
     font-size: 14px;
 }
 #searchlist li a {
-    color: #111;
+    color: #e6b531;
 }
 
 #searchlist li span>a {
     font-size: 14px;
     text-decoration: none;
-    color: #666;
+    color: #63e600;
 }
 @media screen and (max-width: 540px){
     #searchbox input{
         text-align: center;
     }
+}
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    color: #44b4cc; opacity:1; 
+}
+
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+    color: #44b4cc;opacity:1;
+}
+
+input:-ms-input-placeholder{
+    color: #44b4cc;opacity:1;
+}
+
+input::-webkit-input-placeholder{
+    color: #44b4cc;opacity:1;
 }

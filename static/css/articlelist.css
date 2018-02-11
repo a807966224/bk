@@ -1,6 +1,6 @@
 
 #articlelist .type-head{
-    color: #999;
+    color: #9acd9a;
 }
 
 #articlelist ul{
@@ -22,19 +22,19 @@
 }
 
 #articlelist li time{
-    color: #666;
+    color: #ccff33;
     font-size: 14px;
 }
 
 #articlelist li>a{
-    color: #111;
+    color: #e6b531;
     word-wrap: break-word;
 }
 
 #articlelist li span>a{
     font-size: 14px;
     text-decoration: none;
-    color: #666;
+    color: #63e600;
 }
 
 
