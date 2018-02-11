@@ -1,11 +1,54 @@
 ---
-　　layout: default
-　　title: 我的Blog
-　　---
-　　<h2>{{ page.title }}</h2>
-　　<p>最新</p>
-　　<ul>
-　　　　{% for post in site.posts %}
-　　　　　　<li>{{ post.date | date_to_string }} <a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a></li>
-　　　　{% endfor %}
-　　</ul>
+layout: default
+css: [common.css,articlelist.css]
+js: [common.js]
+---
+<div id="articlelist">
+	{% for post in site.posts  %}
+		{% capture this_year %}{{ post.date | date: "%Y" }}{% endcapture %}
+		{% capture next_year %}{{ post.previous.date | date: "%Y" }}{% endcapture %}
+
+		{% if forloop.first %}
+			<div class="type-head">{{ this_year }}</div>
+			<ul>
+		{% endif %}
+
+		{% if this_year == next_year %}
+			<li>
+				<time>{{ post.date | date: "%Y/%m/%d" }}&nbsp;</time>
+				<a href="{{site.context}}{{ post.url }}">{{ post.title }}</a>
+				<span>&nbsp;
+					{% for cat in post.categories %}
+						<a href="{{site.context}}/pages/categories.html#{{ cat }}">{{ cat }}</a>
+					{% endfor %}
+				</span>
+			</li>
+		{% else %}
+			{% if forloop.last %}
+					<li>
+						<time>{{ post.date | date: "%Y/%m/%d" }}&nbsp;</time>
+						<a href="{{site.context}}{{ post.url }}">{{ post.title }}</a>
+						<span>&nbsp;
+							{% for cat in post.categories %}
+								<a href="{{site.context}}/pages/categories.html#{{ cat }}">{{ cat }}</a>
+							{% endfor %}
+						</span>
+					</li>
+				</ul>
+			{% else %}
+					<li>
+						<time>{{ post.date | date: "%Y/%m/%d" }}&nbsp;</time>
+						<a href="{{site.context}}{{ post.url }}">{{ post.title }}</a>
+						<span>&nbsp;
+							{% for cat in post.categories %}
+								<a href="{{site.context}}/pages/categories.html#{{ cat }}">{{ cat }}</a>
+							{% endfor %}
+						</span>
+					</li>
+				</ul>
+				<div class="type-head">{{ next_year }}</div>
+				<ul>
+			{% endif %}
+		{% endif %}
+	{% endfor %}
+</div>

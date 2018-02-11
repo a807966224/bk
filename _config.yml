@@ -1,45 +1,31 @@
-# Welcome to Jekyll!
-#
-# This config file is meant for settings that affect your whole blog, values
-# which you are expected to set up once and rarely edit after that. If you find
-# yourself editing this file very often, consider using Jekyll's data files
-# feature for the data you need to update frequently.
-#
-# For technical reasons, this file is *NOT* reloaded automatically when you use
-# 'bundle exec jekyll serve'. If you change this file, please restart the server process.
+encoding: utf-8
 
-# Site settings
-# These are used to personalize your new site. If you look in the HTML files,
-# you will see them accessed via {{ site.title }}, {{ site.email }}, and so on.
-# You can create any custom variable you would like, and they will be accessible
-# in the templates via {{ site.myvariable }}.
-title: Scott.WDR
-email: 807966224@qq.com
-description: >- # this means to ignore newlines until "baseurl:"
-  A man, at the very least, should protect four things, 
-  the land under his feet, 
-  the parents of the family, 
-  the woman in his arms, 
-  the brothers around them.
-baseurl: "" # the subpath of your site, e.g. /blog
-url: "" # the base hostname & protocol for your site, e.g. http://example.com
-twitter_username: jekyllrb
-github_username:  jekyll
+# seo
+title: Scott.WDR'Blog
+description: Scott.WDR'Blog
+keywords: Blog,Scott.WDR'Blog
+author: Scott.WDR
 
-# Build settings
-markdown: kramdown
-theme: minima
-plugins:
-  - jekyll-feed
+# "","/blog"
+context: ""
+scheme: "http"
+domain: "blog.tmaize.net"
 
-# Exclude from processing.
-# The following items will not be processed, by default. Create a custom list
-# to override the default setting.
-# exclude:
-#   - Gemfile
-#   - Gemfile.lock
-#   - node_modules
-#   - vendor/bundle/
-#   - vendor/cache/
-#   - vendor/gems/
-#   - vendor/ruby/
+## 文章url前缀 context/自定义，下面的context为''
+permalink: /posts/:year/:month/:day/:title.html
+
+copyright: 2016
+beianhao: "皖ICP备xxxx号"
+
+coderay:
+  coderay_tab_width: 4
+
+# Gitalk
+gitalk: 
+  enable: true    #用来做启用判断可以不用
+  clientID: '86de3a763db76425e2f6'    #上面生成的往这里怼
+  clientSecret: '4dab7e678cd58693a4116d356aca0a0dd80c060b'   #同上
+  repo: a807966224.github.io    #仓库名称
+  owner: 807966224@qq.com    #github用户名
+  admin: Scott.WDR
+  distractionFreeMode: true
