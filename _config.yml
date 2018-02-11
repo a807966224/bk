@@ -8,8 +8,8 @@ author: Scott.WDR
 
 # "","/blog"
 context: ""
-scheme: "http"
-domain: "blog.tmaize.net"
+scheme: "https"
+domain: "a807966224.github.io"
 
 ## 文章url前缀 context/自定义，下面的context为''
 permalink: /posts/:year/:month/:day/:title.html
