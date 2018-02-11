@@ -19,13 +19,3 @@ beianhao: "皖ICP备xxxx号"
 
 coderay:
   coderay_tab_width: 4
-
-# Gitalk
-gitalk: 
-  enable: true    #用来做启用判断可以不用
-  clientID: '86de3a763db76425e2f6'    #上面生成的往这里怼
-  clientSecret: '4dab7e678cd58693a4116d356aca0a0dd80c060b'   #同上
-  repo: a807966224.github.io    #仓库名称
-  owner: 807966224@qq.com    #github用户名
-  admin: Scott.WDR
-  distractionFreeMode: true
