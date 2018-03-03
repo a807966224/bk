@@ -136,3 +136,13 @@ if (window.attachEvent) {
     window.addEventListener("load", menutoggle, false);
     window.addEventListener("load", toTop, false);
 }
+
+window.tctipConfig = {
+        staticPrefix:   "http://static.tctip.com",
+        buttonImageId:  1,  
+        buttonTip:  "zanzhu",
+        list:{
+            alipay: {qrimg: "https://a807966224.github.io/static/img/p_pay1.jpg"},
+            weixin:{qrimg: "https://a807966224.github.io/static/img/w_pay1.jpg"}, 
+        }
+};

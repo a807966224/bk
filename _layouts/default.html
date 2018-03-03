@@ -13,6 +13,7 @@
 		{% for js in page.js %}
 			<script type="text/javascript" src="{{site.context}}/static/js/{{ js }}"></script>
 		{% endfor %}
+		<script src="http://static.tctip.com/js/tctip.min.js"></script>
 		<title>{% if page.title %}{{ page.title }} {% else %}{{ site.title }}{% endif %}</title>
 	</head>
 <body>
