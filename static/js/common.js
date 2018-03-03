@@ -137,6 +137,7 @@ if (window.attachEvent) {
     window.addEventListener("load", toTop, false);
 }
 
+/*赞赏链接*/
 window.tctipConfig = {
         staticPrefix:   "http://static.tctip.com",
         buttonImageId:  1,  
