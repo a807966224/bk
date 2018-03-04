@@ -1,0 +1,124 @@
+---
+layout: mypost
+title: Java-内功修炼日志-1
+categories: [花把势 转 内功]
+---
+　　<p>
+		<img src="{{site.context}}/static/img/HeadFirstJava/01.png"/>
+
+		write once ---> run anywhere
+		<br>
+
+		运行方式：源代码 -> 编译器 -> 输出（字节码） -> Java虚拟机（JVM）
+
+		<img src="{{site.context}}/static/img/HeadFirstJava/02.png"/>
+		<br>
+		为何所有的东西都要包含在类里？
+		<br>
+		因为Java是面向对象的语言，类是对象的蓝图，Java中的绝大多数东西都是对象。
+		<br>
+		编译器与JVM？
+		<br>
+		JVM目前个人感觉更易发现运行时异常;编译器像是编写source code的时候检查是否符合JAVA代码规范的第一任代理；
+		<br>
+		<h2>椅子大战</h2>
+		面向对象的做法：
+		<br>
+		<textarea style="width: 100%;height: 300px; font-family: &quot;Courier New&quot;; font-size: 12px; line-height: 1.5;">
+			
+			package com.chair.ShapeP;
+
+			public class Shape {
+
+			    public void say(String name){
+
+			        System.out.println("shape name:" + name);
+
+			    }
+
+			}
+
+			package com.chair.ShapeS;
+
+			import com.chair.ShapeP.Shape;
+
+			public class Circular extends Shape{
+
+
+			}
+
+			package com.chair.ShapeS;
+
+			import com.chair.ShapeP.Shape;
+
+			public class OtherShape extends Shape{
+
+
+			    @Override
+			    public void say(String name){
+			        System.out.println("otherShap name:" + name);
+			    }
+			}
+
+
+			package com.chair;
+
+			import com.chair.ShapeS.Circular;
+			import com.chair.ShapeS.OtherShape;
+
+			public class GameStarted {
+
+			    public static void main(String args[]) {
+
+			        System.out.println("games started!!!");
+
+			        Circular circular = new Circular();
+			        circular.say("圆形");
+
+			        OtherShape otherShape = new OtherShape();
+			        otherShape.say("其他图形");
+
+			        System.out.println("games stoped!!!");
+
+			    }
+
+			}
+
+		</textarea>
+		<br>
+		面向过程做法：
+		<br>
+		<textarea style="width: 100%;height: 300px; font-family: &quot;Courier New&quot;; font-size: 12px; line-height: 1.5;">
+			package com.chair;
+
+			public class GameStarted2 {
+
+			    public static void main (String args[]) {
+
+			        String shapeCode = "Circular";//图形代码
+			        String shapeName = "圆形";//图形名称
+
+			        if ("Circular".equals(shapeCode)) {
+			            System.out.println("shape Name :" + shapeName);
+			        } else if ("OtherShape".equals(shapeCode)) {
+			            System.out.println("other shape Name :" + shapeName);
+			        } else {
+			            System.out.println("形状代码有误");
+			        }
+
+			    }
+
+			}
+
+		</textarea>
+		<br>
+		你对面向对象有什么看法？
+		<br>
+		类可以重复的运用在别的应用程序中，当写一个新类时，可以使人类有足够的扩展性，以便以后用到。-----Chris（who?）
+
+
+
+	</p>
+　　<p>
+		Head First Java ,page num：47 &nbsp;&nbsp;{{ page.title }}&nbsp;&nbsp;{{ page.date | date_to_string }}
+	</p>
