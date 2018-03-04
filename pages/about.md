@@ -34,3 +34,8 @@ title: 关于我
 + Linux的简单使用，各种服务的搭建
 
 + 能够使用Git/SVN对代码版本进行控制
+
+
+<video autoplay="autoplay" preload="none" controls="controls" src="{{site.context}}/static/img/video/ilike.mp4">
+	<source type="video/mp4" src="{{site.context}}/static/img/video/ilike.mp4">
+</video>
