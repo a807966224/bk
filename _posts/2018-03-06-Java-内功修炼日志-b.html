@@ -1,0 +1,95 @@
+---
+layout: mypost
+title: Java-内功修炼日志-3
+categories: [花把势 转 内功]
+---
+　　<p>
+		<embed src="//music.163.com/outchain/player?type=2&id=27906910&auto=1&height=66" autostart="true" loop="-1" draggable="true" > 
+		<br>
+		问：如果想要传入的参数是对象而不是primitive主数据类型会怎样？<br>
+		答：在Java中所传递的所有东西都是值，但此值是变量所携带的值，若你对方法传入参数，实际上传入的是远程控制的拷贝。<br>
+
+		<br>
+		在Head First Java 第79页   有错误的表述：Getter
+		<br>
+
+		数据隐藏：将实际变量标记为private，将Getter和Setter标记为public。
+		<br>
+
+		你无需初始化实例变量，因为他们本身是有默认值的，如：数字的预设值（包括char） 为0，boolean的预设值为false,而对象引用则为null，这个null是什么意思？代表没有操作对象的远程控制，它是个引用而不是对象。
+
+		<br>
+		Java内置类库：
+		<br>
+		ArrayList
+		<br>
+		如何判断类的继承设计是否正确？
+		<br>
+		使用IS-A测试来检验，如：三角形是一个多边形=====yes<br>
+		澡盆是一个浴室======no<br>
+		想确认你的设计是否正确，使用这样的测试来加以测试，如果不合理，表示你的设计有问题。
+		<br>
+
+		<textarea style="padding: 10px;width: 100%;height: 300px; font-family: &quot;Courier New&quot;; font-size: 12px; line-height: 1.5;">
+			package com.zx20180306;
+
+			public class TestA {
+
+			    //以下是实例变量，类内声明
+			    static int ii;
+			    static double dd;
+			    static char cc;
+			    static float ff;
+			    static boolean bb;
+			    static Integer II;
+			    public static void main (String args[]) {
+
+			        //以下是局部变量，方法内声明，编译器不会告诉你错误，
+			        int i;
+			        double d;
+			        char c;
+			        float f;
+			        boolean b;
+			        Integer I;
+
+			        //局部变量没有初始值，实例变量有初始值
+			        //对于局部变量：当你使用的时候，如下，编译器会告诉你，该变量并没有初始化，需要你为它们初始化。
+			        //System.out.println("i:" + i +"==");
+
+			        //对于实例变量：则可以直接使用未初始化的变量
+			        System.out.println("i:" + ii +"==dd:" + dd + "==cc:" + cc + "==ff:" + ff + "==bb:" + bb + "==II:" + II);
+			        //i:0==dd:0.0==cc: ==ff:0.0==bb:false==II:null
+
+			        //使用 == 符号  primitive主数据类型
+			        int i1 = 9;
+			        byte b1 = 9;
+			        System.out.println(i1 == b1);//true
+
+			        //使用 == 来判断两个非primitive主数据类型变量，是否引用于堆上的同一个对象
+			        Dog dog1 = new Dog();
+			        Dog dog2 = new Dog();
+			        Dog dog3 = dog1;
+
+			        System.out.println((dog1 == dog2) + "==" + (dog1 == dog3));//false==true
+			    }
+
+			    static public class Dog {
+			        private String name;
+
+			        public void setName (String name) {
+			            this.name = name;
+			        }
+			        public String getName () {
+			            return this.name;
+			        }
+			    }
+
+			}
+
+		</textarea>
+
+
+	</p>
+　　<p>
+		Head First Java ,page num：183 &nbsp;&nbsp;{{ page.title }}&nbsp;&nbsp;{{ page.date | date_to_string }}
+	</p>
