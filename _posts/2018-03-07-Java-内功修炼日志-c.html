@@ -1,0 +1,167 @@
+---
+layout: mypost
+title: Java-内功修炼日志-4
+categories: [花把势 转 内功]
+---
+　　<p>
+		<embed src="http://music.163.com/song/media/outer/url?id=25906124.mp3" autostart="true" loop="-1" draggable="true" > 
+		<br>
+		Dog dog = new Dog();引用与对象类型一致；<br>
+		但是在多态下，引用可以与对象类型不保持一致。<br>
+		问：你能够继承任何一个类吗？就像类的成员一样如果类是私有的话你就不能继承？<br>
+		答：除了内部类，还有三种情况可以防止某个类被作出子类；<br>
+		第一种是存取控制，虽然说类不能作为私有，但是可以标记为非公有，非公有的类只能被同一个包的类作出子类。<br>
+		第二种是使用final修饰符，这表示它是继承树的末端，不能被继承。<br>
+		第三种是让类只拥有private的构造函数。<br>
+		方法覆盖的前提：参数必须要一样，且返回类型必须要兼容，不能降低方法的存取权限，发生在继承的关系中。<br>
+		方法重载的前提：与继承无关，类中的方法名相同，参数列表不同的情况下，返回类型随意设定，存取权限随意更改。<br>
+		<br><br><br>
+		接口是什么？接口是100%的抽象类，抽象类是什么？它是无法初始化的类。<br>
+		由abstract修饰符修饰的类是抽象类；抽象类除了被继承，是没有用途，没有值，没有目的。不是抽象类的就是具体类。<br>
+		<img src="{{site.context}}/static/img/HeadFirstJava/04.png"/><br>
+		抽象的类代表此类必须是被extends过，抽象的方法代表此方法一定要被覆盖过。<br>
+		如果你声明出一个抽象方法，就必须将这个类也标记为抽象的，你不能在非抽象的类中拥有抽象方法。<br>
+		<img src="{{site.context}}/static/img/HeadFirstJava/05.png"/><br>
+		<img src="{{site.context}}/static/img/HeadFirstJava/06.png"/><br>
+		无参构造函数编译器一定会帮你编写吗？错误的，只要你写了一个构造函数，则是告诉编译器，我有构造函数，不需要你来帮我写，这样编译器则不会帮你写无参构造函数，你必须自己去手写无参构造函数。<br>
+		this() 和 super()不能同时调用。<br>
+		<img src="{{site.context}}/static/img/HeadFirstJava/07.png"/><br>
+		局部变量生活在堆栈上，实例变量生活在堆上。<br>
+		静态的方法不能调用非静态的变量。<br>
+		静态的方法不能调用非静态的方法。<br>
+		静态的变量是被同类的所有实例共享的变量。<br>
+		final的变量代表你不能改变它的值，final的方法代表你不能覆盖掉该method，final的类代表你不能继承该类。<br>
+		Java5.0之前，需要对其进行包装，int i = 288; Integer iWrap = new Integer(i);<br>
+		拆箱：int unWrapped = iWrap.intValue();在Java5.0之后加入了autoboxing功能，即可不在手动写包装与拆箱的操作了。<br>
+		<img src="{{site.context}}/static/img/HeadFirstJava/08.png"/><br>
+		<img src="{{site.context}}/static/img/HeadFirstJava/09.png"/><br>
+		<img src="{{site.context}}/static/img/HeadFirstJava/10.png"/><br>
+		<br>
+		<textarea style="padding: 10px;width: 100%;height: 300px; font-family: &quot;Courier New&quot;; font-size: 12px; line-height: 1.5;">
+				package com.zx20180307;
+
+				public class Animal {
+
+				    public void say () {
+				        System.out.println("animal is say!");
+				    }
+
+				}
+
+				package com.zx20180307;
+
+				public class Cat extends Animal{
+
+				    @Override
+				    public void say () {
+				        System.out.println("Cat is say!");
+				    }
+
+				}
+
+				package com.zx20180307;
+
+				public class Dog extends Animal{
+
+				    //重写
+				    @Override
+				    public void say () {
+				        System.out.println("Dog is say!");
+				    }
+
+				    //重载
+				    public void say (String who) {
+				        System.out.println(who + " is say !");
+				    }
+
+				}
+
+				package com.zx20180307;
+
+				public class TestA {
+
+				    public static void main (String args[]) {
+
+				        Animal a1 = new Dog();
+
+				        Animal a2 = new Cat();
+
+				        a1.say();
+				        a2.say();
+
+				        Dog d1 = new Dog();
+				        d1.say("dog");
+
+				        System.out.println(String.format("%,.1f",123456789.123456789));
+
+				    }
+
+				}
+
+
+				package com.zx20180307;
+
+				import javax.sound.midi.*;
+
+				import static java.lang.System.out;
+
+				public class TestB {
+
+				    public void play () {
+				        try {
+				            Sequencer sequencer = MidiSystem.getSequencer();
+				            sequencer.open();
+				            Sequence sequence = new Sequence(Sequence.PPQ,4);
+				            Track track = sequence.createTrack();
+				            ShortMessage shortMessage = new ShortMessage();
+
+				            //command : 类型（144-打开，128-关闭）
+				            //channel : 频道（1-吉他，2-Bass，3-IronMaiden）
+				            //data1 : 要发出的音符（0-127代表不同的音高）
+				            //data2 : 音道（0几乎听不到，100还可以）
+				            shortMessage.setMessage(144,1,44,100);
+				            //tick : 音长（数字）
+				            MidiEvent midiEvent = new MidiEvent(shortMessage,1);
+				            track.add(midiEvent);
+				            ShortMessage shortMessage1 = new ShortMessage();
+				            shortMessage1.setMessage(128,1,44,100);
+				            MidiEvent midiEvent1 = new MidiEvent(shortMessage1,1);
+				            track.add(midiEvent1);
+				            sequencer.setSequence(sequence);
+				            sequencer.start();
+				        } catch (Exception e) {
+				            e.printStackTrace();
+				        }
+				    }
+
+				    public static void main (String args[]) {
+				        TestB testB = new TestB();
+				        testB.play();
+
+				        int i;
+				        try {
+				            i = 100;
+				            out.println(i / 0);
+				        } catch (ArithmeticException e) {
+				            e.printStackTrace();
+				            i = 100;
+				            out.println(i / 100);
+				        }
+				    }
+
+				}
+
+
+		</textarea>
+
+
+		作业：实现ArrayList<String> 功能；<br>
+
+
+
+
+
+	</p>
+　　<p>
+		Head First Java ,page num：346 &nbsp;&nbsp;{{ page.title }}&nbsp;&nbsp;{{ page.date | date_to_string }}
+	</p>
