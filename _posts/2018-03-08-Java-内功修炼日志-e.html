@@ -1,0 +1,106 @@
+---
+layout: mypost
+title: Java-内功修炼日志-5
+categories: [花把势 转 内功]
+---
+　　<p>
+		Java图形化<br>
+		<br>
+		在GUI上面加东西的三种方法：<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;一，在frame上放置widget，如加上按钮/窗体/radio/button等，frame.getContentPane().add(myButton),Javax.swing这个包上面有超过一打的widget类型。<br><br>
+		&nbsp;&nbsp;&nbsp;&nbsp;二，在widget上绘制2D图形，使用graphics.fillOval(70,70,100,100)。<br><br>
+		&nbsp;&nbsp;&nbsp;&nbsp;三，在widget上绘制JPEG图，把图形画在Widget上，graphics.drawImage(myPic,20,20,this)。<br><br>
+		
+		<textarea style="padding: 10px;width: 100%;height: 300px; font-family: &quot;Courier New&quot;; font-size: 12px; line-height: 1.5;">
+
+			package com.zx20180308;
+
+
+			import javax.swing.*;
+			import java.awt.event.ActionEvent;
+			import java.awt.event.ActionListener;
+
+			/**
+			 * 我的第一个gui程序
+			 */
+			public class TestA implements ActionListener {
+			    JButton button;
+
+
+			    public static void main (String args[]) {
+
+			        TestA testA = new TestA();
+			        testA.go();
+			    }
+
+			    public void go() {
+			        //创建frame 和 button
+			        JFrame frame = new JFrame();
+			        button = new JButton("click me");
+
+			        button.addActionListener(this);
+
+			        //这一行会在window关闭时，把程序关闭掉
+			        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+			        //把button加到frame的pane上
+			        frame.getContentPane().add(button);
+
+			        frame.setSize(300,300);
+
+			        //显示出来
+			        frame.setVisible(true);
+			    }
+
+			    @Override
+			    public void actionPerformed(ActionEvent e) {
+			        button.setText("i' ve been clicked!");
+			    }
+			}
+
+			package com.zx20180308;
+
+			import javax.swing.*;
+			import java.awt.*;
+
+			public class TestB extends JPanel {
+
+
+			    @Override
+			    public void paintComponent (Graphics graphics) {
+
+			        graphics.setColor(Color.orange);
+
+			        //前面两个代表起点的坐标，后面两个代表长度和高度
+			        graphics.fillRect(20,50,100,100);
+
+			        Image image = new ImageIcon("me.jpg").getImage();
+
+			        graphics.drawImage(image,3,5,this);
+
+
+			        //this.getWidth()此处取得本身的高度
+			        graphics.fillRect(0,0,this.getWidth(),this.getHeight());
+			        int red = (int) (Math.random() * 255);
+			        int green = (int) (Math.random() * 255);
+			        int blue = (int) (Math.random() * 255);
+
+			        Color color = new Color (red,green,blue);
+			        graphics.setColor(color);
+			        graphics.fillRect(70,70,100,100);
+
+
+			    }
+
+			}
+
+
+		</textarea>
+
+
+
+
+	</p>
+　　<p>
+		Head First Java ,page num：376 &nbsp;&nbsp;{{ page.title }}&nbsp;&nbsp;{{ page.date | date_to_string }}
+	</p>

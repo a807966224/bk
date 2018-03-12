@@ -1,0 +1,149 @@
+---
+layout: mypost
+title: Java-内功修炼日志-7
+categories: [花把势 转 内功]
+---
+　　<p>
+		序列化和文件的输入/输出<br>
+		<br>
+		<img src="{{site.context}}/static/img/HeadFirstJava/11.png"/><br>
+		当对象被序列化时，被该对象引用的实例变量也会被序列化，且所有被引用的对象也会被序列化，最棒的是，这些操作都是自动进行的！
+		<br>
+		当被序列化的类未实现Serializable标记类时，会报以下错误！（注意上面那句话所说的）
+		<img src="{{site.context}}/static/img/HeadFirstJava/12.png"/><br>
+		如果某实例变量不能或不应该被序列化，就把它标记为transient（瞬时）的。
+		<br>
+		为什么会有不被序列化的对象的可能呢？因为会出现 此 对象必须实时的从线上或库里取出来，所以不能被序列化！<br>
+		静态变量会被序列化吗？<br>
+		不会，静态变量static代表每个类一个，而不是每个对象一个，当对象被还原时，静态变量会维持类中原本的样子，而不是存储时的样子。
+		<br>
+		聊天程序概况：客户端必须认识服务器，服务器必须认识所有的客户端。<br>
+		<img src="{{site.context}}/static/img/HeadFirstJava/13.png"/><br>
+
+
+
+		
+		<textarea style="padding: 10px;width: 100%;height: 300px; font-family: &quot;Courier New&quot;; font-size: 12px; line-height: 1.5;">
+
+			package com.zx20180312;
+
+			import java.io.*;
+
+			/**
+			 * 序列化对象到本地
+			 */
+			public class TestA implements Serializable{
+
+			    class Person implements Serializable{
+
+			        transient private String noSer;
+
+			        private String name;
+			        private String sex;
+
+			        public String getName() {
+			            return name;
+			        }
+
+			        public void setName(String name) {
+			            this.name = name;
+			        }
+
+			        public String getSex() {
+			            return sex;
+			        }
+
+			        public void setSex(String sex) {
+			            this.sex = sex;
+			        }
+
+			        public String getNoSer() {
+			            return noSer;
+			        }
+
+			        public void setNoSer(String noSer) {
+			            this.noSer = noSer;
+			        }
+			    }
+
+			    public static void main (String args[]) {
+
+			        try {
+			            TestA testA = new TestA();
+			            Person person = testA.new Person();
+			            person.setName("zx");
+			            person.setSex("female");
+			            //此属性由于被瞬时标识符修饰，序列化时，会跳过此对象
+			            person.setNoSer("no Ser!");
+			            FileOutputStream fileOutputStream = new FileOutputStream("person.ser");
+			            ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+			            objectOutputStream.writeObject(person);
+			            objectOutputStream.close();
+
+
+			            //解序列化
+			            FileInputStream fileInputStream = new FileInputStream("person.ser");
+			            ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+			            Person desPer = (Person)objectInputStream.readObject();
+			            System.out.println(desPer.getName() + "==" + desPer.getSex() + "==" + desPer.getNoSer());
+			            objectInputStream.close();//全自动关闭
+			        } catch (FileNotFoundException e) {
+			            e.printStackTrace();
+			        } catch (IOException e) {
+			            e.printStackTrace();
+			        } catch (ClassNotFoundException e) {
+			            e.printStackTrace();
+			        }
+			    }
+
+			}
+
+		</textarea>
+
+		<br>
+
+		<textarea style="padding: 10px;width: 100%;height: 300px; font-family: &quot;Courier New&quot;; font-size: 12px; line-height: 1.5;">
+
+			package com.zx20180312;
+
+			import java.io.*;
+
+			public class TestB {
+
+			    public static void main (String args[]) {
+
+			        try {
+			            FileWriter fileWriter = new FileWriter("test.txt");
+
+			            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+			            bufferedWriter.write("mycat!1112222");
+			            bufferedWriter.flush();
+			            bufferedWriter.close();
+
+			            FileReader fileReader = new FileReader("test.txt");
+			            BufferedReader bufferedReader = new BufferedReader(fileReader);
+			            String line = null;
+			            while ((line = bufferedReader.readLine()) != null) {
+			                System.out.println(line);
+			            }
+			            bufferedReader.close();
+
+			            fileReader.close();
+			        } catch (IOException e) {
+			            e.printStackTrace();
+			        }
+
+			    }
+
+			}
+
+
+		</textarea>
+
+
+
+
+	</p>
+　　<p>
+		Head First Java ,page num：489 &nbsp;&nbsp;{{ page.title }}&nbsp;&nbsp;{{ page.date | date_to_string }}
+	</p>
