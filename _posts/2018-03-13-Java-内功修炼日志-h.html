@@ -1,0 +1,84 @@
+---
+layout: mypost
+title: Java-内功修炼日志-8
+categories: [花把势 转 内功]
+---
+　　<p>
+		新建线程的3个状态：可执行，执行中，暂时不可执行（堵塞状态）<br>
+		<br>
+		<img src="{{site.context}}/static/img/HeadFirstJava/14.png"/><br>
+		当线程被睡眠了（sleep），则在睡眠时间里，不会被调度器唤醒！
+		<br>
+		<img src="{{site.context}}/static/img/HeadFirstJava/15.png"/><br>
+		<img src="{{site.context}}/static/img/HeadFirstJava/16.png"/><br>
+		TreeSet：以有序状态保持并可防止重复。<br>
+		HashMap：可用成对的name/value来保存或取出。<br>
+		LinkedList：针对经常插入或删除中间元素所设计的高效率集合。<br>
+		HashSet：防止重复的集合，可快速查找相符的元素。<br>
+		LinkedHashMap：类似hashMap，但可记住元素插入的顺序，也可以设定成依照元素上次存取的先后顺序。<br>
+		泛型意味着更好的类型安全性。<br>
+		HashSet如何检查重复：hashCode()与equals()。<br>
+		TreeSet的元素必须是Comparable。<br>
+		泛型与万用字符的区别<br>
+		jar 命令<br>
+		通过jws来部署<br>
+		Java RMI 提供客户端和服务端的辅助设施对象，远程调用的另一种方式。<br>
+
+		
+		<textarea style="padding: 10px;width: 100%;height: 300px; font-family: &quot;Courier New&quot;; font-size: 12px; line-height: 1.5;">
+
+			package com.zx20180313;
+
+			public class TestA {
+
+			    class MyRunnable implements Runnable {
+
+			        @Override
+			        public void run() {
+			            go();
+			        }
+			        public void go() {
+			            doMore();
+			        }
+			        public void doMore() {
+			            System.out.println("top o the stack");
+			        }
+			    }
+
+			    /**
+			     * 这个程序的结果：会出现   两个输出语句 顺序上的不确定性，也就是验证了，调度器的大部分公平性！.....
+			     * 虽然说  我的机器  出现back in main 的情况较多！！！
+			     * @param args
+			     */
+			    public static void main (String args[]) {
+
+			            TestA testA = new TestA();
+			            MyRunnable myRunnable = testA.new MyRunnable();
+
+			            Thread thread = new Thread(myRunnable);
+
+			            thread.start();
+
+			            //以下代码的加入，主要想让自己的机器可以输出back in main 少一点！！！
+			            //所以书中说，这个sleep方法，使结果更能在预料中！！！但是 也仅仅时更能而已！
+			            try {
+			                Thread.sleep(500);
+			            } catch (InterruptedException e) {
+			                e.printStackTrace();
+			            }
+
+			            System.out.println("back in main !");
+
+			    }
+
+			}
+
+
+		</textarea>
+
+
+
+	</p>
+　　<p>
+		Head First Java ,page num：未完待续 &nbsp;&nbsp;{{ page.title }}&nbsp;&nbsp;{{ page.date | date_to_string }}
+	</p>
