@@ -1,0 +1,85 @@
+---
+layout: mypost
+title: Java-内功修炼日志-9
+categories: [花把势 转 内功]
+---
+　　<p>
+		创建和销毁对象<br>
+		考虑用静态工厂方法代替构造器。
+		<br>
+		静态工厂方法与构造函数不同的第一大优势在于，他们有名称。
+		<img src="{{site.context}}/static/img/Effective/01.png"/><br>
+		静态工厂方法与构造函数不同的第二大优势在于，不必在每次调用他们的时候创建一个新的对象。<br>
+		静态工厂方法与构造函数不同的第三大优势在于，他们可以返回原返回类型的任何子类型的对象。<br>
+		静态工厂方法与构造函数不同的第三大优势在于，在创建参数化类型实例的时候，它们使代码更加简单。<br>
+		静态工厂方法与构造函数不同的缺点主要表现为：无公有构造方法无法创建对象/与其它的静态方法没有任何区别。与其这样难过，不如使用无参构造器，将每个状态值都get set 起来，这样代码的可读性增强。<br>
+		<br>
+		<br>
+		<br>
+		遇到多个构造器参数时要考虑用构造器。<br>
+		当类中状态过多时，用多参构造器时，会加大代码的编写难度（如果一处编码错误，不易识别，且编译器不会报错）。<br>
+		<a href="void(0);">Singleton例子</a><br>
+		通过私有化构造器不可实例化的能力。<br>
+		要优先使用基本类型数据，避免无意识的自动装箱操作。（看下方的测试代码！）<br>
+		总要覆盖对象的toString方法。<br>
+		对于equals方法，请遵守约定。（这里的约定很重要，比如说在重写equals需要重写hasCode方法...）<br>
+		谨慎的覆盖clone方法。<br>
+		
+		<textarea style="padding: 10px;width: 100%;height: 300px; font-family: &quot;Courier New&quot;; font-size: 12px; line-height: 1.5;">
+
+			package com.zx20180314;
+
+			import java.util.HashMap;
+			import java.util.Map;
+
+			public class TestA {
+
+			    public static void main (String args[]) {
+
+			        boolean flag = true;
+
+			        Boolean Flag = Boolean.valueOf(flag);
+			        //以上转型的实现原理，如下代码所示：
+			//        public static Boolean valueOf(boolean b) {
+			//            return (b ? TRUE : FALSE);
+			//        }
+			//        public static final Boolean TRUE = new Boolean(true);
+			//
+			//        public static final Boolean FALSE = new Boolean(false);
+
+			//        public Boolean(boolean value) {
+			//            this.value = value;
+			//        }
+
+
+			        System.out.println(Flag);
+
+
+
+			        Map<String,String> map = new HashMap<String,String>();
+
+			//       如果有这样的工具类： Map<String,String> map2 = HashMap.newInstance();
+
+			        String str = new String("123123");//每次执行一次，就会创建一个新的对象
+			        String str1 = "123123";//这个就是维持一个对象
+
+			//        long sum = 0l;//进行以下操作耗时944ms
+			        Long sum = 0l;//进行以下操作耗时17799ms
+			        long startTime = System.currentTimeMillis();
+			        for (int i=0;i<Integer.MAX_VALUE;i++) {
+			            sum += i;
+			        }
+			        System.out.println(sum + "===>" + (System.currentTimeMillis() - startTime) + "ms");
+
+			    }
+
+			}
+
+		</textarea>
+
+
+
+	</p>
+　　<p>
+		Effective Java ,page num：46 &nbsp;&nbsp;{{ page.title }}&nbsp;&nbsp;{{ page.date | date_to_string }}
+	</p>
