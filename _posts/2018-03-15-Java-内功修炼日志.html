@@ -1,0 +1,353 @@
+---
+layout: mypost
+title: Java-内功修炼日志-10
+categories: [花把势 转 内功]
+---
+　　<p>
+		<br>
+		什么叫线程？利用对象，可将一个程序分割成相互独立运行的区域，我们通常也需要将一个程序转换多个独立运行的子任务，像这样的每个子任务都叫作一个线程。
+		<br>
+		创建一个线程的最简单的方法是继承Thread类，Thread类最重要的方法是run()，但为了使用run()，必须对其进行过载或覆盖，使其能充分的按照吩咐行事。<br>
+		问：为什么用static来修饰方法或变量？有什么用处？<br>
+		答：对于用static修饰的变量称为静态变量，也叫类变量。由类创建的所有对象都可以共用这个变量。类变量随着类的加载而加载，即使此类还未new过对象，这个变量也存在，而且仅仅一份。顺便提下实例变量，实例变量是类new了一个对象之后才有的，每个对象有自己的那一份。（以上分析请细细品读！）&nbsp;&nbsp;&nbsp;当一个方法或者变量需要初始化加载，或者是经常被调用的时候才可以加上static，用static修饰的方法可以用类名直接调用，不用的一定要先实例化一个对象才可以调用。用static修饰的方法叫静态方法，也叫类方法，随着类的加载而加载，就算没有new一个对象，类方法还是存在，且仅存在一份，类方法内部可以调用静态的变量和静态的方法，而不能调用非静态的变量和方法，反之，非静态的方法可以调用静态的方法和变量。====> 上面夸夸的说了一大堆，意思就是：静态方法和变量类加.即可调用，且仅存在一份；非静态方法和变量类对象各人拥有个人的，互不干扰。<br>
+		
+		<textarea style="padding: 10px;width: 100%;height: 300px; font-family: &quot;Courier New&quot;; font-size: 12px; line-height: 1.5;">
+
+			package com.zx20180315;
+
+			import java.applet.Applet;
+			import java.awt.*;
+			import java.awt.event.ActionEvent;
+			import java.awt.event.ActionListener;
+			import java.awt.event.WindowAdapter;
+			import java.awt.event.WindowEvent;
+
+			public class TestA extends Applet{
+
+			    private int count = 0;
+			    private Button
+			                onOff = new Button("Toggle"),
+			                start = new Button("Start");
+			    private TextField t = new TextField(10);
+			    private boolean runFlag = true;
+			    public void init () {
+			        add(t);
+			        start.addActionListener(new StartL());
+			        add(start);
+
+			        onOff.addActionListener(new OnOffL());
+			        add(onOff);
+			    }
+
+			    public void go() {
+			        while (true) {
+			            try {
+			                Thread.currentThread().sleep(100);
+			            } catch (InterruptedException e) {
+			                e.printStackTrace();
+			            }
+			            if (runFlag) {
+			                t.setText(Integer.toString(count++));
+			            }
+			        }
+			    }
+
+			    class StartL implements ActionListener {
+
+			        @Override
+			        public void actionPerformed(ActionEvent e) {
+			            go();
+			        }
+			    }
+
+			    class OnOffL implements ActionListener {
+
+			        @Override
+			        public void actionPerformed(ActionEvent e) {
+			            System.out.println(runFlag);
+			            runFlag = !runFlag;
+			        }
+			    }
+
+			    public static void main (String args[]) {
+			        TestA testA = new TestA();
+
+			        Frame aFrame = new Frame("Counterl");
+			        aFrame.addWindowListener(
+			                new WindowAdapter() {
+			                    @Override
+			                    public void windowClosing(WindowEvent e) {
+			                        System.exit(0);
+			                    }
+			                }
+			        );
+			        aFrame.add(testA,BorderLayout.CENTER);
+			        aFrame.setSize(300,200);
+			        testA.init();
+			        testA.start();
+			        aFrame.setVisible(true);
+			    }
+
+			}
+
+
+		</textarea>
+
+		<textarea style="padding: 10px;width: 100%;height: 300px; font-family: &quot;Courier New&quot;; font-size: 12px; line-height: 1.5;">
+
+			package com.zx20180315;
+
+			public class TestB extends Thread {
+
+			    private int countDown = 5;
+			    private int threadNumber;
+			    private static int threadCount = 0;
+
+			    public TestB () {
+			        threadNumber = ++threadCount;
+			        System.out.println("Making " + threadCount);
+			    }
+
+			    @Override
+			    public void run () {
+			        while (true) {
+			            System.out.println("Thread " +
+			            threadNumber + "(" + countDown + ")");
+			            if (--countDown == 0) return;
+			        }
+			    }
+
+			    public static void main (String args[]) {
+			        for (int i=0;i<5;i++)
+			            new TestB().start();
+			        System.out.println("All Thread Started");
+			    }
+			}
+
+
+
+		</textarea>
+
+		<textarea style="padding: 10px;width: 100%;height: 300px; font-family: &quot;Courier New&quot;; font-size: 12px; line-height: 1.5;">
+
+					package com.zx20180315;
+
+					import java.applet.Applet;
+					import java.awt.*;
+					import java.awt.event.ActionEvent;
+					import java.awt.event.ActionListener;
+					import java.awt.event.WindowAdapter;
+					import java.awt.event.WindowEvent;
+
+					/**
+					 * 由TestA演化而来的
+					 * 加入了线程用来监控
+					 */
+					public class TestC extends Thread{
+
+					    private int count = 0;
+					    private Counter2 c2;
+					    private boolean runFlag = true;
+
+					    public TestC (Counter2 counter2) {
+					        this.c2 = counter2;
+					        start();
+					    }
+
+					    public void invertFlag() {
+					        runFlag = !runFlag;
+					    }
+
+					    @Override
+					    public void run () {
+					        while (true) {
+					            try {
+					                sleep(100);
+					            } catch (InterruptedException e) {
+					                e.printStackTrace();
+					            }
+					            if (runFlag) {
+					                c2.t.setText(Integer.toString(count++));
+					            }
+					        }
+					    }
+
+					    public static class Counter2 extends Applet {
+					        TextField t = new TextField(10);
+					        private TestC testC = null;
+					        private Button
+					                    onOff = new Button("Toggle"),
+					                    start = new Button("Start");
+					        public void init () {
+					            add(t);
+
+					            start.addActionListener(new StartL());
+					            add(start);
+					            onOff.addActionListener(new OnOffL());
+					            add(onOff);
+					        }
+
+					        class StartL implements ActionListener {
+					            @Override
+					            public void actionPerformed(ActionEvent e) {
+					                if (testC == null) {
+					                    testC = new TestC(Counter2.this);
+					                }
+					            }
+					        }
+
+					        class OnOffL implements ActionListener {
+					            @Override
+					            public void actionPerformed(ActionEvent e) {
+					                if (testC != null) {
+					                    testC.invertFlag();
+					                }
+					            }
+					        }
+					    }
+
+					    public static void main (String args[]) {
+					        Counter2 applet = new Counter2();
+
+					        Frame aFrame = new Frame("Counter2");
+					        aFrame.addWindowListener(
+					                new WindowAdapter() {
+					                    @Override
+					                    public void windowClosing(WindowEvent e) {
+					                        System.exit(0);
+					                    }
+					                }
+					        );
+					        aFrame.add(applet,BorderLayout.CENTER);
+					        aFrame.setSize(300,200);
+					        applet.init();
+					//        applet.start();
+					        aFrame.setVisible(true);
+					    }
+					}
+
+
+
+				</textarea>
+
+
+		<textarea style="padding: 10px;width: 100%;height: 300px; font-family: &quot;Courier New&quot;; font-size: 12px; line-height: 1.5;">
+			package com.zx20180315;
+
+			import java.applet.Applet;
+			import java.awt.*;
+			import java.awt.event.ActionEvent;
+			import java.awt.event.ActionListener;
+			import java.awt.event.WindowAdapter;
+			import java.awt.event.WindowEvent;
+
+			/**
+			 * 由TestA引发线程的意义
+			 * TestB虽然可以解决多线程问题，但是代码的可读性不强
+			 * 自此推出第三次代码整合(借鉴之前的，自己打了一遍)
+			 */
+			public class TestD extends Applet{
+
+			    private TextField textField = new TextField(10);
+			    private Button start = new Button("start"),
+			                    off = new Button ("off");
+
+			    private CounterMy counterMy = null;
+
+
+			    class CounterMy extends Thread {
+
+			        private int count = 0;
+			        private boolean canCount = true;
+
+			        public CounterMy () {
+			            System.out.println("new CounterMy");
+			            start();
+			        }
+
+			        @Override
+			        public void run () {
+			            System.out.println("not run?");
+			            while (true) {
+			                try {
+			                    sleep(100);
+			                } catch (InterruptedException e) {
+			                    e.printStackTrace();
+			                }
+			                if (canCount) {
+			                    textField.setText((count++) + "");
+			                }
+			            }
+			        }
+
+			        public void changeCanCount () {
+			            canCount = !canCount;
+			        }
+
+
+			    }
+
+
+			    public void init () {
+
+			        add(textField);
+
+			        start.addActionListener(new startL());
+			        add(start);
+			        off.addActionListener(new offL());
+			        add(off);
+			    }
+
+			    class startL implements ActionListener {
+
+			        @Override
+			        public void actionPerformed(ActionEvent e) {
+			            System.out.println("start ant!");
+			            counterMy = new CounterMy();
+			        }
+			    }
+
+			    class offL implements ActionListener {
+
+			        @Override
+			        public void actionPerformed(ActionEvent e) {
+			            System.out.println("off ant!");
+			            if (counterMy != null) {
+			                counterMy.changeCanCount();
+			            }
+			        }
+			    }
+
+			    public static void main (String args[]) {
+
+			        TestD testD = new TestD();
+			        testD.init();
+			        Frame frame = new Frame("My_Counter");
+
+			        frame.addWindowListener(
+			                new WindowAdapter() {
+			                    @Override
+			                    public void windowClosing(WindowEvent e) {
+			                        System.out.println("closed!");
+			                        System.exit(0);
+			                    }
+			                }
+			        );
+			        frame.add(testD);
+
+			        frame.setSize(300,200);
+			        frame.setVisible(true);
+
+			    }
+
+
+
+			}
+
+		</textarea>
+
+
+	</p>
+　　<p>
+		Java编程思想 ,page num：487~ &nbsp;&nbsp;{{ page.title }}&nbsp;&nbsp;{{ page.date | date_to_string }}
+	</p>
