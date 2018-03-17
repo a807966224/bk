@@ -1,0 +1,465 @@
+---
+layout: mypost
+title: Java-内功修炼日志-11
+categories: [花把势 转 内功]
+---
+　　<p>
+		接下来的章程比较难理解，我是从Java编程思想的后半部分往前看的，因为每个人的热点不同，我是属于头热型的，所以想把精力放在我认为有难度的地方，读好好代码，好好读代码！加油！ - - ！<br>
+		<br>
+		对于一个GUI程序来说，主程序类必须从Frame或Applt继承，所以必须用一个接口加入额外的功能，这个接口叫Runnable，其中包含了与Thread一致的基本方法。
+		<br>
+		什么叫守护进程？Java语言可以创建两种线程（用户线程，守护线程）；用户线程：就是我们平常创建的线程，守护线程：主要是用来服务用户线程；如何区分两种线程？当线程中只剩下守护线程时，JVM就会退出，但是如果还有其它的任意一个用户线程还存在，JVM就不会退出。（下面会给出示例）<br>
+		当一个守护线程，创建了多个线程，则对应的线程的属性依然是守护线程！<br>
+		yield()方法：线程让步，就是说当一个线程使用了这个方法之后，它就会把自己CPU执行的时间让掉，让自己或者其它的线程运行！<br>
+
+		<br>
+		
+		<textarea style="padding: 10px;width: 100%;height: 300px; font-family: &quot;Courier New&quot;; font-size: 12px; line-height: 1.5;">
+
+			package com.zx20180317;
+
+			import java.applet.Applet;
+			import java.awt.*;
+			import java.awt.event.ActionEvent;
+			import java.awt.event.ActionListener;
+			import java.awt.event.WindowAdapter;
+			import java.awt.event.WindowEvent;
+
+			public class Counter3 extends Applet implements Runnable{
+			    @Override
+			    public void run() {
+
+			        while (true) {
+
+			            try {
+			                Thread.currentThread().sleep(100);
+			            } catch (InterruptedException e) {
+			                e.printStackTrace();
+			            }
+
+			            if (runFlag) {
+			                textField.setText((count++) + "");
+			            }
+
+			        }
+
+			    }
+
+
+			    private int count = 0;
+			    private boolean runFlag = true;
+			    private Thread selfThread = null;
+			    private Button
+			                onOff = new Button("Toggle"),
+			                start = new Button("Start");
+			    private TextField textField = new TextField(10);
+			    public void init () {
+			        add (textField);
+
+			        onOff.addActionListener(new OnOffL());
+			        add(onOff);
+
+			        start.addActionListener(new StartL());
+			        add(start);
+
+			    }
+
+			    class StartL implements ActionListener {
+
+			        @Override
+			        public void actionPerformed(ActionEvent e) {
+			            System.out.println("started!!!");
+			            if (selfThread == null) {
+			                selfThread = new Thread(Counter3.this);
+			                selfThread.start();
+			            }
+			        }
+			    }
+
+			    class OnOffL implements ActionListener {
+
+			        @Override
+			        public void actionPerformed(ActionEvent e) {
+			            runFlag = !runFlag;
+			        }
+			    }
+
+			    public static void main (String args[]) {
+
+			        Counter3 applet = new Counter3();
+			        Frame aFrame = new Frame("Counter3");
+			        aFrame.addWindowListener(
+			                new WindowAdapter() {
+			                    @Override
+			                    public void windowClosing(WindowEvent e) {
+			                        System.exit(0);
+			                    }
+			                }
+			        );
+
+			        aFrame.add(applet,BorderLayout.CENTER);
+			        aFrame.setSize(300,200);
+			        applet.init();
+			        applet.start();
+			        aFrame.setVisible(true);
+			    }
+
+			}
+
+
+
+		</textarea>
+
+		<textarea style="padding: 10px;width: 100%;height: 300px; font-family: &quot;Courier New&quot;; font-size: 12px; line-height: 1.5;">
+
+			package com.zx20180317;
+
+			public class Deamon extends Thread{
+
+			    private static final int SIZE = 10;
+			    private Thread[] t = new Thread[SIZE];
+			    public Deamon () {
+			        setDaemon(true);
+
+			        start();
+
+			        System.out.println("构造方法");
+			    }
+
+			    @Override
+			    public void run () {
+			        System.out.println("第一次进入run方法");
+			        for (int i=0;i<SIZE;i++) {
+			            System.out.println("tt :" + i);
+			            t = new DaemonSpawn[i];
+			            for(int n=0;n<SIZE;n++) {
+			                System.out.println("tn :" + n);
+			                System.out.println("t[ " + i + " ].isDaemon() = " + t[i].isDaemon());
+			            }
+			        }
+			    }
+
+			    class DaemonSpawn extends Thread {
+			        public void DaemonSpawn(int i){
+			            System.out.println("DaemonSpawn " + i + "started");
+			            start();
+			        }
+
+			        @Override
+			        public void run () {
+			            while (true) {
+			                yield();
+			            }
+			        }
+			    }
+			}
+
+
+			package com.zx20180317;
+
+			import java.io.BufferedReader;
+			import java.io.IOException;
+			import java.io.InputStreamReader;
+
+			public class Deamons {
+
+			    public static void main (String args[]) {
+			        Thread d = new Deamon();
+
+			        System.out.println("d.isDaemon() = " + d.isDaemon());
+			        BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
+			        System.out.println("Waiting for CR");
+			        try {
+			            stdin.readLine();
+			        } catch (IOException e) {
+			            e.printStackTrace();
+			        }
+			    }
+
+			}
+
+
+
+
+		</textarea>
+
+		<textarea style="padding: 10px;width: 100%;height: 300px; font-family: &quot;Courier New&quot;; font-size: 12px; line-height: 1.5;">
+
+					package com.zx20180317;
+
+					import java.applet.Applet;
+					import java.awt.*;
+					import java.awt.event.ActionEvent;
+					import java.awt.event.ActionListener;
+					import java.awt.event.WindowAdapter;
+					import java.awt.event.WindowEvent;
+
+					class TwoCounter extends Thread {
+
+					    private boolean started = false;
+					    private TextField
+					        t1 = new TextField(5),
+					            t2 = new TextField(5);
+					    private Label l =
+					            new Label("count1 == count2");
+					    private int count1 = 0,count2 = 0;
+
+					    public TwoCounter (Container c) {
+					        Panel p = new Panel();
+					        p.add(t1);
+					        p.add(t2);
+					        p.add(l);
+					        c.add(p);
+					    }
+
+					    @Override
+					    public void start () {
+					        if (!started) {
+					            started = true;
+					            super.start();
+					        }
+					    }
+
+					    @Override
+					    public void run () {
+					        while (true) {
+					            t1.setText(Integer.toString(count1++));
+					            t2.setText(Integer.toString(count2++));
+					            try {
+					                sleep(500);
+					            } catch (InterruptedException e) {
+					                e.printStackTrace();
+					            }
+					        }
+					    }
+
+					    public void synchTest() {
+					        Sharingl.incrementAccess();
+					        if (count1 != count2) {
+					            l.setText("Unsynched，count1【" + count1 + "】，count2【" +count2 + "】");
+					        }
+					    }
+
+					}
+
+					class Watcher extends Thread {
+					    private Sharingl p;
+					    public Watcher (Sharingl p) {
+					        this.p = p;
+					        start();
+					    }
+					    @Override
+					    public void run () {
+					        while (true) {
+					            //我刚开始读这个位置的时候，非常费劲，
+					            //其实很简单，人家就是比较数组中的每个对象的属性值是否相等！！！
+					            for (int i=0;i<p.s.length;i++) {
+
+					//                System.out.println("Watcher == > ThreadName : [" + Thread.currentThread().getName() + "]");
+
+					                p.s[i].synchTest();
+					                try {
+					                    sleep(500);
+					                } catch (InterruptedException e) {
+					                    e.printStackTrace();
+					                }
+					            }
+					        }
+					    }
+					}
+
+					public class Sharingl extends Applet {
+
+					    TwoCounter[] s;
+					    private static int accessCount  = 0;
+					    private static TextField aCount =
+					            new TextField ("0",10) ;
+
+					    //这个位置为什么输出的时候，给我的感觉像是按照着线程的数量进行输出呢？
+					    //按理说 应该是 +1 就输出一次， 0 1 2 3 4 5 ... 这样
+					    //但是 目前是 5 10 15 20 25 ...  怪怪的
+					    public static void incrementAccess () {
+					        accessCount++;
+
+					        aCount.setText(Integer.toString(accessCount));
+
+					    }
+					    private Button
+					                start = new Button("Start"),
+					                observer = new Button("Observe");
+					    private boolean isApplet = true;
+					    private int numCounters = 0;
+					    private int numObservers = 0;
+					    public void init () {
+					        if (isApplet) {
+					            numCounters =
+					                    Integer.parseInt(getParameter("size"));
+					            numObservers =
+					                    Integer.parseInt(getParameter("observers"));
+					        }
+					        System.out.println("Sharingl ====> numCounters:[" + numCounters + "]  numObservers : [" + numObservers + "]");
+
+					        s = new TwoCounter[numCounters];
+					        for (int i = 0;i<s.length;i++)
+					            s[i] = new TwoCounter(this);
+
+					        Panel p = new Panel();
+					        start.addActionListener(new StartL());
+					        p.add(start);
+					        observer.addActionListener(new ObserverL());
+					        p.add(observer);
+					        p.add(new Label ("Access Count"));
+					        p.add(aCount);
+					        add(p);
+					    }
+					class StartL implements ActionListener {
+
+					    @Override
+					    public void actionPerformed(ActionEvent e) {
+
+					        System.out.println("StartL====>s.length[" + s.length + "]");
+
+					        for (int i=0;i<s.length;i++) {
+					            s[i].start();
+					        }
+					    }
+					}
+					class ObserverL implements ActionListener {
+
+					    @Override
+					    public void actionPerformed(ActionEvent e) {
+
+					        System.out.println("ObserverL====>numObservers[" + numObservers + "]");
+					        for (int i = 0;i<numObservers;i++) {
+					            new Watcher(Sharingl.this);
+					        }
+					    }
+					}
+					public static void main (String args[]) {
+
+					        System.out.println("main ==> args[] : " + args.length);
+					        Sharingl applet = new Sharingl();
+					        applet.isApplet = false;
+					        applet.numCounters =
+					                (args.length == 0 ? 10 : Integer.parseInt(args[0]));
+					        applet.numObservers =
+					                (args.length < 2 ? 10 : Integer.parseInt(args[1]));
+					        System.out.println("main ==> numCounters : [" + applet.numCounters +
+					                "]   numObservers : [" + applet.numObservers + "]");
+					        Frame aFrame = new Frame("Sharingl");
+					        aFrame.addWindowListener(
+					                new WindowAdapter() {
+					                    @Override
+					                    public void windowClosing(WindowEvent e) {
+					                        System.exit(0);
+					                    }
+					                }
+					        );
+					        aFrame.add(applet,BorderLayout.CENTER);
+					        aFrame.setSize(350,applet.numCounters * 100);
+					        applet.init();
+					        applet.start();
+					        aFrame.setVisible(true);
+					}
+
+					}
+
+
+
+				</textarea>
+
+
+		<textarea style="padding: 10px;width: 100%;height: 300px; font-family: &quot;Courier New&quot;; font-size: 12px; line-height: 1.5;">
+			package com.zx20180317;
+
+			import java.util.Scanner;
+
+			/**
+			 * 借鉴：http://blog.csdn.net/ftx2540993425/article/details/51465031
+			 */
+			public class TestA extends Thread{
+
+			    @Override
+			    public void run () {
+			        int i = 0;
+			        while (true) {
+
+			            System.out.println(i++);
+
+			            try {
+			                Thread.sleep(1000);//1s输出一次
+			            } catch (InterruptedException e) {
+			                e.printStackTrace();
+			            }
+
+			        }
+			    }
+
+			    public static void main (String args[]){
+			        TestA testA = new TestA();
+
+			        //此处说下执行的结果：如果将线程的daemon属性设置为true，也就是守护线程，当主线程结束，则jvm退出；
+			        //                    如果将线程的daemon属性设置为false,也就是用户线程，当主线程结束，jvm不会退出；
+			        testA.setDaemon(true);//设置为守护线程（默认值为false）
+
+			        testA.start();
+			        System.out.println("testA.isDaemon() : " + testA.isDaemon());
+			        Scanner scanner = new Scanner(System.in);
+
+			        scanner.next();//接受输入，使程序在此停顿，一旦用户输入，main线程结束，jvm退出
+			        Runtime.getRuntime().addShutdownHook(new Thread(){
+			            @Override
+			            public void run () {
+			                System.out.println("jvm exit!");
+			            }
+			        });
+
+			    }
+
+			}
+
+
+			package com.zx20180317;
+
+			/**
+			 * 借鉴：http://blog.csdn.net/dabing69221/article/details/17426953
+			 */
+			public class TestB extends Thread{
+
+			    public TestB (String name) {
+			        super(name);
+			    }
+
+			    @Override
+			    public void run () {
+
+			        for (int i=0;i<50;i++) {
+			            System.out.println("i:" + i +"Thread Name :" + Thread.currentThread().getName());
+
+
+			            if (i == 30) {
+			                yield();//线程让步：当前线程让出自己立即执行的机会，再次和其它线程共同竞争cpu执行的机会。
+			            }
+
+			        }
+			    }
+
+
+			    public static void main (String args[]) {
+			        TestB testB1 = new TestB("testB1");
+			        TestB testB2 = new TestB("testB2");
+			        testB1.start();
+			        testB2.start();
+
+			    }
+
+			}
+
+
+		</textarea>
+
+
+	</p>
+　　<p>
+		Java编程思想 ,page num：487~ &nbsp;&nbsp;{{ page.title }}&nbsp;&nbsp;{{ page.date | date_to_string }}
+	</p>
