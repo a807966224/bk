@@ -1,0 +1,268 @@
+---
+layout: mypost
+title: Java-内功修炼日志-15
+categories: [花把势 转 内功]
+---
+　　<p>
+		最近感觉负能量爆棚（原因和job有关）！然后这两天搬家（生活环境变好了很多，希望会越来越好），忙的不知所以，就少写了三天读后感！
+	</p>
+	<p>
+		InputStream类型：InputStream的作用是标志那些从不同起源地产生输入的类，这些起源包括（每个都有一个相关的InputStream子类）
+		1）字节数组
+		2）String对象
+		3）文件
+		4）管道
+		5）一系列其它流
+		6）其它起源地，如Internet连接..
+	</p>
+	<p>
+		例：ByteArrayInputStream,StringBufferInputStream,FileInputStream,PipedInputStream,PipedOutputStream,SequenceInputStream,FilterInput,FilterInputStream
+	</p>
+
+	<p>
+		OutputStream类型：这一类别包括的类决定了我们的输入往何处去，一个字节数组；一个文件；或者一个管道；
+		<br>
+		例：ByteArrayOutputStream；FileOutputStream；PipedOutputStream；FilterOutputStream；
+	</p>
+	
+	<textarea style="padding: 10px;width: 100%;height: 300px; font-family: &quot;Courier New&quot;; font-size: 12px; line-height: 1.5;">
+
+		package com.zx20180324;
+
+		import java.io.File;
+		import java.io.FilenameFilter;
+
+		/**
+		 * 打印出当前类文件所在的文件名称
+		 */
+		public class TestA {
+
+		    public static void main (String args[]) {
+
+		        File path = new File(".");
+
+		        String[] list;
+		        if (args.length == 0) {
+		            list = path.list();
+		        } else {
+		            list = path.list(new DirFilter(args[0]));
+		        }
+
+		        for (int i=0;i<list.length;i++) {
+		            System.out.println(list[i]);
+		        }
+		    }
+
+		}
+
+		class DirFilter implements FilenameFilter {
+
+		    String afn;
+		    DirFilter (String afn) {
+		        this.afn = afn;
+		    }
+		    @Override
+		    public boolean accept(File dir, String name) {
+		        String f = new File(name).getName();
+		        return f.indexOf(afn) != -1;
+		    }
+		}
+
+	</textarea>
+
+	<textarea style="padding: 10px;width: 100%;height: 300px; font-family: &quot;Courier New&quot;; font-size: 12px; line-height: 1.5;">
+
+		package com.zx20180324;
+
+		import java.io.*;
+		import java.nio.Buffer;
+
+		public class NewIODemo {
+
+		    public static void main (String args[]) {
+
+		        //1. Reading input by lines;
+		        try {
+		            BufferedReader in = new BufferedReader(new FileReader("E:\\logs\\tio-examples-helloworld-server\\info.log"));
+		            String s,s2 = new String();
+		            while ((s = in.readLine()) != null) {
+		                s2 += s + "\n";
+		            }
+		            in.close();
+		            System.out.println(s2);
+
+
+		            //1b. Reading standard input:
+		            BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
+		            System.out.print("Enter a line : ");
+		            System.out.println(stdin.readLine());
+
+		            //2. Input from memory
+		            StringReader in2 = new StringReader(s2);
+		            int c;
+		            while ((c = in2.read()) != -1) {
+		                System.out.println((char)c);
+		            }
+
+		            //3. Formatted memory input
+		//            try {
+		//                DataInputStream in3 = new DataInputStream(new StringBufferInputStream(s2));
+		//                while (true) {
+		//                    System.out.println((char)in3.readByte());
+		//                }
+		//            } catch (EOFException e) {
+		//                e.printStackTrace();
+		//            }
+
+		            //4. Line numbering & file output
+		            LineNumberReader li = new LineNumberReader(new StringReader(s2));
+		            BufferedReader in4 = new BufferedReader(li);
+		            PrintWriter out1 = new PrintWriter(new BufferedWriter(new FileWriter("IODemo.out")));
+		            while ((s = in4.readLine()) != null) {
+		                out1.println("Line " + li.getLineNumber() + s);
+		            }
+		            out1.close();
+		        } catch (FileNotFoundException e) {
+		            e.printStackTrace();
+		        } catch (IOException e) {
+		            e.printStackTrace();
+		        }
+
+		        //5. Storing & recovering data
+		        try {
+		            DataOutputStream out2 = new DataOutputStream(new BufferedOutputStream(new FileOutputStream("Data.txt")));
+		            out2.writeDouble(3.1415926);
+		            out2.writeBytes("That was pi");
+		            out2.close();
+
+		            DataInputStream in5 = new DataInputStream(new BufferedInputStream(new FileInputStream("Data.txt")));
+		            BufferedReader in5br = new BufferedReader(new InputStreamReader(in5));
+		            System.out.println(in5.readDouble());
+		            System.out.println(in5.readLine());
+		        } catch (FileNotFoundException e) {
+		            e.printStackTrace();
+		        } catch (IOException e) {
+		            e.printStackTrace();
+		        }
+
+		    }
+
+		}
+
+
+	</textarea>
+
+	<textarea style="padding: 10px;width: 100%;height: 300px; font-family: &quot;Courier New&quot;; font-size: 12px; line-height: 1.5;">
+
+		package com.zx20180324;
+
+		import java.io.*;
+
+		public class IOStreamDemo {
+
+		    public static void main (String args[]) {
+
+		        try {
+		            //Buffered input file
+		            DataInputStream in = new DataInputStream(new BufferedInputStream(new FileInputStream("E:\\logs\\tio-examples-helloworld-server\\info.log")));
+
+		            String s,s2 = new String();
+		            while ((s = in.readLine()) != null){
+		                s2 += s + "\n";
+		                System.out.print(s2);
+		            }
+		            in.close();
+
+		            //2. Input from memory
+		//            StringBufferInputStream in2 = new StringBufferInputStream(s2);
+		//            int c;
+		//            while ((c = in2.read()) != -1) {
+		//                System.out.println((char)c);
+		//            }
+		//
+		//            //3. Formatted memory input
+		//            DataInputStream in3 = new DataInputStream(new StringBufferInputStream(s2));
+		////            while (true) {
+		////                System.out.println((char)in3.readByte());
+		////            }
+		//
+		//            //4. Line numbering & file output
+		//            try {
+		//                LineNumberInputStream li = new LineNumberInputStream(new StringBufferInputStream(s2));
+		//                DataInputStream in4 = new DataInputStream(li);
+		//                PrintStream out1 = new PrintStream(new BufferedOutputStream(new FileOutputStream("IODemo.out")));
+		//                while ((s = in4.readLine()) != null){
+		//                    out1.println("Line " + li.getLineNumber() + s);
+		//                }
+		//                out1.close();
+		//            } catch (EOFException e) {
+		//                System.out.println("End of stream encountered");
+		//            }
+		//
+		//            //5. Storing & recovering data
+		//            DataOutputStream out2 = new DataOutputStream(new BufferedOutputStream(new FileOutputStream("Data.txt")));
+		//            out2.writeBytes("Here's the value of pi: \n");
+		//            out2.writeDouble(3.1415926);
+		//            out2.close();
+		//            DataInputStream in5 = new DataInputStream(new BufferedInputStream(new FileInputStream("Data.txt")));
+		//            System.out.println(in5.readLine());
+		//            System.out.println(in5.readDouble());
+		//
+		//
+		//            //6. Reading/Writing random access files
+		//            RandomAccessFile rf = new RandomAccessFile("rtest.dat","rw");
+		//            for (int i =0;i<10;i++) {
+		//                rf.writeDouble(i+1.44);
+		//            }
+		//            rf.close();
+		//            rf = new RandomAccessFile("rtest.dat","rw");
+		//            rf.seek(5*8);
+		//            rf.writeDouble(47.0001);
+		//            rf.close();
+		//            rf = new RandomAccessFile("rtest.dat","rw");
+		//            for (int i=0;i<10;i++) {
+		//                System.out.println("Value " + i + ":" + rf.readDouble());
+		//            }
+		//            rf.close();
+
+		        } catch (FileNotFoundException e) {
+		            e.printStackTrace();
+		        } catch (IOException e) {
+		            e.printStackTrace();
+		        }
+
+		    }
+		}
+
+
+	</textarea>
+
+	<textarea style="padding: 10px;width: 100%;height: 300px; font-family: &quot;Courier New&quot;; font-size: 12px; line-height: 1.5;">
+
+		package com.zx20180324;
+
+		import java.io.*;
+
+		public class TestB {
+
+		    public static void main (String args[]) {
+		        try {
+		            DataInputStream in = new DataInputStream(new BufferedInputStream(new FileInputStream("E:\\logs\\tio-examples-helloworld-server\\info.log")));
+
+		            while (in.available() != 0) {
+		                System.out.println(new String(in.readLine().getBytes("ISO-8859-1"),"UTF-8"));
+		            }
+
+		        } catch (FileNotFoundException e) {
+		            e.printStackTrace();
+		        } catch (IOException e) {
+		            e.printStackTrace();
+		        }
+		    }
+
+		}
+
+	</textarea>
+　　<p>
+		Java编程思想 ,page num：285~332 &nbsp;&nbsp;{{ page.title }}&nbsp;&nbsp;{{ page.date | date_to_string }}
+	</p>
