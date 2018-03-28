@@ -1,0 +1,71 @@
+---
+layout: mypost
+title: Mysql优化经历
+categories: [数据库里的故事]
+---
+　　<h2>{{ page.title }}</h2>
+　　<p>
+		课程表 数据100条：
+			create table Course(
+
+			c_id int PRIMARY KEY,
+
+			name varchar(10)
+
+			)
+	<textarea style="padding: 10px;width: 100%;height: 300px; font-family: &quot;Courier New&quot;; font-size: 12px; line-height: 1.5;">
+
+delimiter //   -- 把界定符改成双斜杠
+CREATE PROCEDURE BatchInsert(IN init INT, IN loop_time INT)  -- 第一个参数为初始ID号（可自定义），第二个位生成MySQL记录个数
+BEGIN
+      DECLARE ID INT;
+			DECLARE Var INT;
+      SET ID = init;
+			SET Var = 0;
+      WHILE Var < loop_time DO
+          insert into course(name) values (CONCAT('课程', ID));
+          SET ID = ID + 1;
+					SET Var = Var + 1;
+      END WHILE;
+  END;
+  //
+delimiter ;  -- 界定符改回分号
+
+
+call BatchInsert(1,100); -- 回掉函数，添加测试数据
+	</textarea>
+
+	</p>
+
+	<p>
+		学生表 数据70000条:
+
+		create table Student(
+
+		id int PRIMARY KEY,name varchar(10)
+		)
+
+		<textarea style="padding: 10px;width: 100%;height: 300px; font-family: &quot;Courier New&quot;; font-size: 12px; line-height: 1.5;">
+
+		delimiter //   -- 把界定符改成双斜杠
+		CREATE PROCEDURE BatchInsert2(IN init INT, IN loop_time INT)  -- 第一个参数为初始ID号（可自定义），第二个位生成MySQL记录个数
+		BEGIN
+		      DECLARE ID INT;
+					DECLARE Var INT;
+		      SET ID = init;
+					SET Var = 0;
+		      WHILE Var < loop_time DO
+		          insert into Student(name) values (CONCAT('学生', ID));
+		          SET ID = ID + 1;
+							SET Var = Var + 1;
+		      END WHILE;
+		  END;
+		  //
+		delimiter ;  -- 界定符改回分号
+
+
+		call BatchInsert2(1,70000);
+	</textarea>
+
+	</p>
+　　<p>{{ page.date | date_to_string }}</p>
