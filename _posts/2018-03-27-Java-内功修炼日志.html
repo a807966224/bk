@@ -1,0 +1,73 @@
+---
+layout: mypost
+title: Java-内功修炼日志-16
+categories: [花把势 转 内功]
+---
+　　<p>
+		算法的定义：在特定的计算模型下，在信息处理过程中为了解决某一类问题而设计的一个指令序列。
+			<br>
+		算法的基本要素：输入，输出，确定性，可行性，有穷性。
+	</p>
+
+	<p>
+		将某一算法为了处理规模为n的问题所需要的时间记作T(n)，那么随着N的增长，运行时间T(n)将如何增长？我们将T(n)称作算法的时间复杂度。
+			<br>
+		渐进复杂度及大Ο（读音：big-oh、欧米可荣（大写））记号，通常情况下，我们不需要去知道T(n)的确切大小，而只需对其上界作出估计。比如说：如果存在一个正常数a N和一个函数f(n)，使得对于任何n>N，都有T(n) < a * f(n)，我们就可以认为在n足够大之后，f(n)给出了T(n)的一个上界，对于这种情况，我们记为T(n) = Ο(fn(n))；
+			<br>
+
+		好了，今天介绍了算法的时间复杂度/渐进复杂度的意义，下面使用冒泡算法进行示例：
+	</p>
+	
+
+	<textarea style="padding: 10px;width: 100%;height: 300px; font-family: &quot;Courier New&quot;; font-size: 12px; line-height: 1.5;">
+
+		package com.zx20180328;
+
+		/**
+		 * 冒泡排序算法
+		 */
+		public class SortDemo {
+
+
+		    public static void main(String args[]) {
+
+
+		        //给出一组数字，从小到大排序
+		        int[] nums = {3,9,31,7,8,4,6,12,2,99};
+
+		        for (int i=0;i<nums.length;i++) {
+
+		            for (int m=0;m<nums.length;m++) {
+
+		                if (nums[i] < nums[m]) {
+		                    System.out.println(nums[i] + " < " + nums[m]);
+		                    int tmp = nums[i];
+		                    nums[i] = nums[m];
+		                    nums[m] = tmp;
+		                } else {
+		                    System.out.println(nums[i] + " > " + nums[m]);
+		                    continue;
+		                }
+
+		            }
+
+		        }
+
+		        for (int i=0;i<nums.length;i++) {
+		            System.out.print( nums[i] + "\t");
+		        }
+
+		    }
+
+		}
+
+
+	</textarea>
+
+	<p>
+		根据上面对算法的时间复杂度/渐进复杂度的表述，得知：最外层最多循环(n-1)次，因此，总共需要执行的基本操作不超过2(n-1)(n-1)，若取a=2和f(n)=(n-1)(n-1)，则T(n) < 2 * n * n，也就是说T(n) = O(n*n)对于规模为n的任意输入，算法的运行时间都不会超过O(f(n))。
+	</p>
+
+　　<p>
+		数据结构与算法 ,page num：1~ &nbsp;&nbsp;{{ page.title }}&nbsp;&nbsp;{{ page.date | date_to_string }}
+	</p>
