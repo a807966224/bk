@@ -15,24 +15,24 @@ categories: [数据库里的故事]
 			)
 	<textarea style="padding: 10px;width: 100%;height: 300px; font-family: &quot;Courier New&quot;; font-size: 12px; line-height: 1.5;">
 
-delimiter //   -- 把界定符改成双斜杠
-CREATE PROCEDURE BatchInsert(IN init INT, IN loop_time INT)  -- 第一个参数为初始ID号（可自定义），第二个位生成MySQL记录个数
-BEGIN
-      DECLARE ID INT;
-			DECLARE Var INT;
-      SET ID = init;
-			SET Var = 0;
-      WHILE Var < loop_time DO
-          insert into course(name) values (CONCAT('课程', ID));
-          SET ID = ID + 1;
-					SET Var = Var + 1;
-      END WHILE;
-  END;
-  //
-delimiter ;  -- 界定符改回分号
+		delimiter //   -- 把界定符改成双斜杠
+		CREATE PROCEDURE BatchInsert(IN init INT, IN loop_time INT)  -- 第一个参数为初始ID号（可自定义），第二个位生成MySQL记录个数
+		BEGIN
+		      DECLARE ID INT;
+					DECLARE Var INT;
+		      SET ID = init;
+					SET Var = 0;
+		      WHILE Var < loop_time DO
+		          insert into course(name) values (CONCAT('课程', ID));
+		          SET ID = ID + 1;
+							SET Var = Var + 1;
+		      END WHILE;
+		  END;
+		  //
+		delimiter ;  -- 界定符改回分号
 
 
-call BatchInsert(1,100); -- 回掉函数，添加测试数据
+		call BatchInsert(1,100); -- 回掉函数，添加测试数据
 	</textarea>
 
 	</p>
@@ -47,25 +47,128 @@ call BatchInsert(1,100); -- 回掉函数，添加测试数据
 
 		<textarea style="padding: 10px;width: 100%;height: 300px; font-family: &quot;Courier New&quot;; font-size: 12px; line-height: 1.5;">
 
-		delimiter //   -- 把界定符改成双斜杠
-		CREATE PROCEDURE BatchInsert2(IN init INT, IN loop_time INT)  -- 第一个参数为初始ID号（可自定义），第二个位生成MySQL记录个数
-		BEGIN
-		      DECLARE ID INT;
-					DECLARE Var INT;
-		      SET ID = init;
-					SET Var = 0;
-		      WHILE Var < loop_time DO
-		          insert into Student(name) values (CONCAT('学生', ID));
-		          SET ID = ID + 1;
-							SET Var = Var + 1;
-		      END WHILE;
-		  END;
-		  //
-		delimiter ;  -- 界定符改回分号
+			delimiter //   -- 把界定符改成双斜杠
+			CREATE PROCEDURE BatchInsert2(IN init INT, IN loop_time INT)  -- 第一个参数为初始ID号（可自定义），第二个位生成MySQL记录个数
+			BEGIN
+			      DECLARE ID INT;
+						DECLARE Var INT;
+			      SET ID = init;
+						SET Var = 0;
+			      WHILE Var < loop_time DO
+			          insert into Student(name) values (CONCAT('学生', ID));
+			          SET ID = ID + 1;
+								SET Var = Var + 1;
+			      END WHILE;
+			  END;
+			  //
+			delimiter ;  -- 界定符改回分号
 
 
-		call BatchInsert2(1,70000);
-	</textarea>
+			call BatchInsert2(1,70000);
+		</textarea>
 
 	</p>
+
+
+	<p>
+		
+		学生成绩表：
+			CREATE table SC(
+			    sc_id int PRIMARY KEY,
+			    s_id int,
+			    c_id int,
+			    score int
+			)
+
+		<textarea style="padding: 10px;width: 100%;height: 300px; font-family: &quot;Courier New&quot;; font-size: 12px; line-height: 1.5;">
+
+			delimiter //   -- 把界定符改成双斜杠
+			CREATE PROCEDURE BatchInsert3(IN init INT, IN loop_time INT)  -- 第一个参数为初始ID号（可自定义），第二个位生成MySQL记录个数
+			BEGIN
+			      DECLARE ID INT;
+						DECLARE Var INT;
+						DECLARE Var1 INT;
+						DECLARE Var1Size INT;
+						DECLARE v INT;
+			      SET ID = init;
+						SET Var = 1;
+						SET Var1 = 1;
+						SET Var1Size = 100;
+			      WHILE Var <= loop_time DO
+
+							repeat
+								select RAND()*100 into v; 
+			          insert into sc (s_id,c_id,score) values (ID,Var1,v);
+								SET Var1 = Var1 + 1;
+							until Var1>=Var1Size
+							end repeat;
+
+							SET ID = ID + 1;
+							SET Var = Var + 1;
+							SET Var1 = 1;
+			      END WHILE;
+			  END;
+			  //
+			delimiter ;  -- 界定符改回分号
+
+
+			call BatchInsert3(1,7000);
+
+		</textarea>
+	</p>
+
+	<p>
+		
+		接下来查询，课程12的分数为100分的学生集合？
+
+		我这有两种查询方式，<br>
+
+		条件查询：<br>
+		select student.* from student where student.id in (
+		select sc.s_id from sc where sc.c_id = (select course.c_id from course where course.name = '课程12') and sc.score = 100
+		)
+		<br>
+
+		查询时间：0.360s<br>
+
+		查询时间还好，解析下sql语句并查看下sql执行计划：<br>
+		explain select student.* from student where student.id in (
+		select sc.s_id from sc where sc.c_id = (select course.c_id from course where course.name = '课程50') and sc.score = 100
+		);
+		show WARNINGS;
+		<img src="{{site.context}}/static/img/Mysql/00.png"/><br>
+
+		查询类型为All,并且进行了全表扫描，所以加索引！
+		create index sc_cid_index on sc(c_id)<br>
+		create index sc_score_index on sc(score)<br>
+		
+		再次查询，耗时：0.012s   这个时间目前是最快的了！<br>
+
+
+		联表查询：<br>
+		
+		select student.* from student inner join sc on sc.s_id = student.id where sc.c_id = 12 and sc.score=100
+		
+
+		<br>
+
+		查询时间：0.395s<br>
+		呦，时间照条件的竟然变长了！看下sql执行计划：<br>
+		<img src="{{site.context}}/static/img/Mysql/01.png"/><br>
+
+		好吧，打破了我的第一个想法，开始的时候我认为 联表 应该比条件过滤  查询要快！但是这次竟然出乎意料！
+
+		我们常规建立索引吧！
+		create index sc_cid_index on sc(c_id)<br>
+		create index sc_score_index on sc(score)<br>
+
+		再次查询后，耗时：0.012s，看样子  这次优化，针对这个条件进行查询 这个时间是最快的了！<br>
+
+
+		还有，本次我创建的数据，不够离散，可能也是因为这个的原因，导致  我这次示范不是很准确，或者说效益不大的根本原因吧，后期我会继续完善此例！
+
+
+	</p>
+
+
 　　<p>{{ page.date | date_to_string }}</p>

@@ -1,0 +1,142 @@
+---
+layout: mypost
+title: Java-内功修炼日志-17
+categories: [花把势 转 内功]
+---
+　　<p>
+		算法：三进制转换（可认为n进制转换！）<br>
+		<textarea style="padding: 10px;width: 100%;height: 300px; font-family: &quot;Courier New&quot;; font-size: 12px; line-height: 1.5;">
+
+		package com.zx20180329;
+
+		public class SystemTest {
+
+		    public static void main (String args[]) {
+
+		        //此处我们使用取模留余法（哈哈，忘了原来叫啥了）
+
+		        System.out.println(getNumStr(101,3));
+
+
+		        System.out.println(getNumStr(8,2));
+		    }
+
+
+		    /**
+		     *
+		     * @param num   数字
+		     * @param sys   进制
+		     * @return
+		     */
+		    public static String getNumStr (int num, int sys) {
+
+
+
+		        StringBuilder str = new StringBuilder("");
+		        while (true) {
+
+		            int remainder1 = num % sys;//取余数
+		            int mo = num / sys;//取模数
+
+		            if (mo == 0) {
+		                str.append(remainder1);
+		                break;
+		            } else {
+
+		                num = mo;
+		                str.append(remainder1);
+		                continue;
+		            }
+		        }
+
+
+		        return str.reverse().toString();
+		    }
+
+		}
+
+
+	</textarea>
+	</p>
+
+	<p>
+		算法：数组的求和：<br>
+		<textarea style="padding: 10px;width: 100%;height: 300px; font-family: &quot;Courier New&quot;; font-size: 12px; line-height: 1.5;">
+
+		package com.zx20180329;
+
+		public class SumTest {
+
+		    public static void main (String args[]){
+
+		        int[] num = {1,2,3,4,5,6,7,8,9,10};
+		        System.out.println(getSum(num));
+
+		    }
+
+		    public static int getSum (int[] num) {
+
+		        int sum = 0;//初始化需要o(1) 时间
+
+		        //方法主体是一个循环，其中进行累加操作，每次累加属于基本操作，可在o(1)时间内完成
+		        for (int i=0;i<num.length;i++) {
+
+		            sum += num[i];
+
+		        }
+		        //则可推算  o(1) + o(1) * n = o(n + 1) ====> o(n)
+
+		        return sum;
+		    }
+
+		}
+
+	</textarea>
+
+	</p>
+
+	<p>
+
+		算法：幂函数：<br>
+
+		<textarea style="padding: 10px;width: 100%;height: 300px; font-family: &quot;Courier New&quot;; font-size: 12px; line-height: 1.5;">
+
+		package com.zx20180329;
+
+		public class PowerTest {
+
+		    public static void main (String args[]) {
+
+		        //幂函数：计算某非负整数的正整数幂
+
+		        System.out.println(getPower(2,3));
+
+
+		    }
+
+		    public static int getPower (int num, int r) {
+
+		        int result = 1;
+
+		        //方法主体需要循环 r 次，则需要 o(r) 时间，
+		        //则可推算时间复杂度：o(r) ====> o(num^r)
+		        while (0 < r--) {
+
+		            result = result * num;
+
+		            System.out.println("result : " + result);
+		        }
+
+		        return result;
+		    }
+		}
+
+	</textarea>
+
+
+	</p>
+	
+
+　　<p>
+		数据结构与算法 ,page num：1~14 &nbsp;&nbsp;{{ page.title }}&nbsp;&nbsp;{{ page.date | date_to_string }}
+	</p>
