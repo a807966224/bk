@@ -1,0 +1,105 @@
+---
+layout: mypost
+title: Java-内功修炼日志-20
+categories: [花把势 转 内功]
+---
+　　<p>
+		重视Java虚拟机
+
+	</p>
+
+
+	<p>
+		jvm的启动流程：根据当前路径和系统版本去找jvm.cfg装载配置文件，根据配置文件找到JVM.dll文件实现JVM基本功能，通过jvm虚拟机初始化JNIEnv接口，最后找到main方法运行程序；
+		<img src="{{site.context}}/static/img/jvm/03.png"/>
+		<img src="{{site.context}}/static/img/jvm/04.png"/>
+		方法区（Perm永久区）：保存装在的类信息（String  1.6在方法区，1.7+放到了堆里）
+		堆：线程共享，Gc来说是分代的！
+		<img src="{{site.context}}/static/img/jvm/05.png"/>
+		栈：线程私有；帧栈（局部变量，操作数栈）
+		<br>
+		栈上分配：减少GC的压力，适用于小对象（几十Bytes）
+		<br>
+		线程的工作内存和主存：工作内存读取主存数据（read,load）;工作内存数据写入主存（store,write）；由于一个线程的数据写入到主存后，不能立即被其它线程所察觉，所以需要一个关键字（volatile）；将其写入的值立即可使其它变量察觉到（写回到主存到中）；
+		volatile 不能代替锁，效率一般来说比锁高！
+		<br>
+		<img src="{{site.context}}/static/img/jvm/06.png"/>
+		<br>
+		System.gc();
+
+		<br>
+
+		<textarea style="padding: 10px;width: 100%;height: 300px; font-family: &quot;Courier New&quot;; font-size: 12px; line-height: 1.5;">
+			import java.util.*;
+
+			public class TestA {
+
+
+				public static void main (String args[]) {
+
+
+					//比如说  我分配了堆的最大10M 最小5M 
+					byte[] bs = null;
+
+					Vector v = new Vector();
+					for (int i=0;i<20;i++) {
+						bs = new byte[1024*1024];//分配了1m的空间
+						v.add(bs);
+					}
+
+
+
+					//这里目前我做实验后得出的结论：当程序创建的实例对象小于Xms值时，会首先使用这部分值，并且不会GC
+					//如果大于Xms 小于Xmx，则会扩容，用来容纳新创建的实例对象
+					//如果已经大于了当前堆的最大值，则会发生full Gc ，并且将实例对象容纳在老年代中
+
+					System.out.print("Xmx=");
+					System.out.println(Runtime.getRuntime().maxMemory()/1024.0/1024+"M");
+
+					System.out.print("free mem=");
+					System.out.println(Runtime.getRuntime().freeMemory()/1024.0/1024+"M");
+
+					System.out.print("total mem=");
+					System.out.println(Runtime.getRuntime().totalMemory()/1024.0/1024+"M");
+
+
+				}
+
+			}
+		</textarea>
+
+
+		<img src="{{site.context}}/static/img/jvm/07.png"/>
+
+	</p>
+
+	<p>
+		
+		GC算法：引用计数法，<br>
+		标记清除法，（标记阶段，清除阶段）
+		<img src="{{site.context}}/static/img/jvm/08.png"/>
+		<br>
+		标记压缩法（标记整理法）
+		<br>
+		复制算法（两块内存，每次使用其中一块，清理时，将存活的对象复制到另一块内存中，清除掉当前内存块所有对象，交换两块内存的角色。）
+		<br>
+		分代思想：新生代（短命对象，适用于复制算法；长命对象适用标记清除或标记压缩法）
+		<br>
+		Stop the world!（全局停顿）
+		<br>
+		GC参数：串行收集器（古老的效率高的可能会产生长时间停顿的 -XX:+UseSerialGC）
+		<br>
+		并行收集器（-XX:+UseParNewGC 新生代并行，老生代串行，复制的算法，多核支持，-XX:ParallelGCThreads 限制线程数量）
+		<br>
+		Parallel收集器（类似ParNew，更加关注吞吐量，-XX:+UseParallelGC ---> 使用Parallel收集器+老年代串行，-XX:UseParallelOldGC ---> 使用Parallel收集器+并行老年代）
+		<br>
+		CMS算法
+		<br>
+<img src="{{site.context}}/static/img/jvm/09.png"/>
+<img src="{{site.context}}/static/img/jvm/10.png"/>
+	</p>
+	
+
+　　<p>
+		jvm 学习 &nbsp;&nbsp;{{ page.title }}&nbsp;&nbsp;{{ page.date | date_to_string }}
+	</p>
