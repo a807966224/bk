@@ -1,0 +1,278 @@
+---
+layout: mypost
+title: 网络编程从入门到深入01
+categories: [网络编程从入门到深入]
+---
+　　<h2>{{ page.title }}</h2>
+　　<p>
+		什么叫BIO，NIO，AIO？适用于什么样的场景？<br>
+
+		<img src="{{site.context}}/static/img/io/01.png"/><br>
+		<img src="{{site.context}}/static/img/io/02.png"/><br>
+		<img src="{{site.context}}/static/img/io/03.png"/><br>
+
+		网上找的资源哈，因为我是觉得 我自己的中文水平不咋地（不喜欢学习语文...后悔），这个足以让读者理解IO的区别与应用场景了！
+
+
+		<textarea style="padding: 10px;width: 100%;height: 300px; font-family: &quot;Courier New&quot;; font-size: 12px; line-height: 1.5;">
+
+			package com.zx20180406;
+
+			import java.io.IOException;
+			import java.net.ServerSocket;
+			import java.net.Socket;
+			import java.util.concurrent.LinkedBlockingQueue;
+			import java.util.concurrent.ThreadPoolExecutor;
+			import java.util.concurrent.TimeUnit;
+
+			public class BIO_ServerTest {
+
+			    public static final ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(25,50,60, TimeUnit.SECONDS,
+			            new LinkedBlockingQueue<Runnable>());
+
+			    public static void main (String args[]) {
+
+			        try {
+			            ServerSocket serverSocketocket = new ServerSocket(8088);
+			            System.out.println(Thread.currentThread().getName() + " 启动 " + 8088);
+
+			            while (true) {
+			                Socket socket = serverSocketocket.accept();
+
+			                threadPoolExecutor.execute(new SocketProcessor(socket));
+			                System.out.println("有新的连接啦，当前线程数量:" + threadPoolExecutor.getActiveCount());
+
+			            }
+			        } catch (IOException e) {
+			            e.printStackTrace();
+			        }
+
+			    }
+			}
+
+
+			// socket 处理
+			class SocketProcessor implements Runnable {
+
+			    Socket socket;
+
+			    public SocketProcessor(Socket socket) {
+			        this.socket = socket;
+			    }
+
+			    public void run() {
+			        // 给客户端，返回简单字符串
+			        try {
+			            // 创建一个字节数组
+			            byte[] requestBody = new byte[10];
+			            socket.setSoTimeout(1000000);
+			            // 阻塞 如果一直没数据，就会等在这里
+			            socket.getInputStream().read(requestBody);
+			            String request = new String(requestBody);
+
+			            System.out.println("收到数据，当前线程数：" + BIO_ServerTest.threadPoolExecutor.getActiveCount() + "，请求内容：" + request);
+			            // 给一个当前时间作为返回值
+			            socket.getOutputStream().write(("response : " + System.currentTimeMillis()).getBytes());
+			            socket.getOutputStream().flush();
+
+			        } catch (Exception e) {
+			            e.printStackTrace();
+			        } finally {
+			            // 处理完一个请求后，继续丢到线程池，继续阻塞等到下一个请求数据InputStream().read()
+			            BIO_ServerTest.threadPoolExecutor.execute(new SocketProcessor(socket));
+			        }
+			    }
+			}
+
+
+
+		</textarea>
+
+		<textarea style="padding: 10px;width: 100%;height: 300px; font-family: &quot;Courier New&quot;; font-size: 12px; line-height: 1.5;">
+
+			package com.zx20180406;
+
+			import java.io.BufferedReader;
+			import java.io.IOException;
+			import java.io.InputStreamReader;
+			import java.net.Socket;
+			import java.net.UnknownHostException;
+
+
+			public class BIO_ClientTest {
+
+			    public static void main(String[] args) throws UnknownHostException, IOException, InterruptedException {
+			        Socket socket = new Socket("localhost", 8088);
+			        System.out.println("和8088建立新连接，等待输入内容，客户端端口号：" + socket.getLocalPort());
+
+			        // 获取控制台输入的内容
+			        BufferedReader re = new BufferedReader(new InputStreamReader(System.in));
+			        String request;
+			        while (true) {
+			            request = re.readLine();
+			            // 发送请求
+			            socket.getOutputStream().write(request.getBytes());
+			            // 接收响应
+			            byte[] response = new byte[1024];
+			            socket.getInputStream().read(response);
+			            System.out.println("收到服务端的响应: " + new String(response));
+			        }
+			    }
+
+			}
+
+		</textarea>
+
+		<textarea style="padding: 10px;width: 100%;height: 300px; font-family: &quot;Courier New&quot;; font-size: 12px; line-height: 1.5;">
+
+			package com.zx20180406;
+
+			import java.io.IOException;
+			import java.net.InetSocketAddress;
+			import java.nio.ByteBuffer;
+			import java.nio.channels.SelectionKey;
+			import java.nio.channels.Selector;
+			import java.nio.channels.ServerSocketChannel;
+			import java.nio.channels.SocketChannel;
+			import java.util.Iterator;
+			import java.util.Set;
+			import java.util.concurrent.LinkedBlockingQueue;
+			import java.util.concurrent.ThreadPoolExecutor;
+			import java.util.concurrent.TimeUnit;
+
+			public class NIO_ServerTest {
+
+			    public static Selector selector;
+
+			    public static final ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(10, 10, 10, TimeUnit.SECONDS,
+			            new LinkedBlockingQueue<Runnable>());
+
+			    private static ServerSocketChannel serverSocketChannel;
+
+			    private static final int port = 8088;
+
+			    public static void main(String[] args) throws Exception {
+
+			        // serversocket
+			        serverSocketChannel = ServerSocketChannel.open();
+			        serverSocketChannel.configureBlocking(false);
+			        // 开启并监听端口
+			        serverSocketChannel.bind(new InetSocketAddress(port));
+			        System.out.println("NIO启动:" + port);
+			        // 选择器，根据指定的条件，选择需要的东西
+			        // 获取一个选择器
+			        NIO_ServerTest.selector = Selector.open();
+
+			        // 在这个socket服务端通道上面，添加刚刚获取的选择器
+			        // 增加一个过滤条件：OP_ACCEPT 建立新的连接
+			        serverSocketChannel.register(NIO_ServerTest.selector, SelectionKey.OP_ACCEPT);
+
+			        while (true) {
+
+			            // 根据查询器已有的条件去查询(去操作系统底层管理socket连接的地方查询)
+			            // 查询超时的时间是1秒钟，如果1秒内没查到结果，继续执行下面的代码
+			            NIO_ServerTest.selector.select(1000);
+
+			            // 获取查询结果
+			            Set<SelectionKey> selected = NIO_ServerTest.selector.selectedKeys();
+			            // 遍历查询结果
+			            Iterator<SelectionKey> iter = selected.iterator();
+			            while (iter.hasNext()) {
+			                // 被封装的查询结果
+			                SelectionKey key = iter.next();
+
+			                // 判断是哪一个根据哪个条件查询出来的
+			                if (key.isAcceptable()) { // 如果是Acceptable，表明查询条件是OP_ACCEPT，代表有新的连接建立了
+			                    // 处理连接
+			                    // 在服务端通道中，取出新的socket连接
+			                    SocketChannel chan = serverSocketChannel.accept();
+			                    // 设置为非阻塞模式
+			                    chan.configureBlocking(false);
+			                    // 在新的socket连接上，增加一个查询器（复用上面已有的查询器）
+			                    // 并且，查询条件是：OP_READ 有数据传输
+			                    chan.register(NIO_ServerTest.selector, SelectionKey.OP_READ);
+
+			                    System.out.println("有新的连接啦，当前线程数量:" + NIO_ServerTest.threadPoolExecutor.getActiveCount());
+			                } else if (key.isReadable()) { // 如果是Acceptable，表明这个查询结果所使用的查询条件是OP_READ，代表某个连接有数据传输过来了
+			                    // 从查询结果中，获取到对应的有数据传输的socket连接
+			                    SocketChannel socketChannel = (SocketChannel) key.channel();
+			                    // 取消查询，表示这个socket连接当前正在被处理，不需要被查询到
+			                    key.cancel();
+			                    // 设置为非阻塞模式
+			                    socketChannel.configureBlocking(false);
+			                    // 交给线程池去处理
+			                    NIO_ServerTest.threadPoolExecutor.execute(new NioSocketProcessor(socketChannel));
+			                }
+			            }
+			            // 清除查询结果
+			            selected.clear();
+			            // 清除不需要被查询的记录
+			            NIO_ServerTest.selector.selectNow();
+			        }
+
+			    }
+
+			}
+
+			// socket 处理
+			class NioSocketProcessor implements Runnable {
+
+			    SocketChannel clientSocketChannel;
+
+			    public NioSocketProcessor(SocketChannel socketChannel) {
+			        this.clientSocketChannel = socketChannel;
+			    }
+
+			    public void run() {
+			        // TODO 忽略...业务处理
+			        // 简单处理一下...
+			        try {
+			            // 申请一个缓冲区
+			            ByteBuffer byteBuffer = ByteBuffer.allocate(1024);
+			            // 将数据读到缓冲区
+			            clientSocketChannel.read(byteBuffer);
+			            // 读完数据后，将缓冲区设置为读模式
+			            byteBuffer.flip();
+			            // 将缓冲区数据读出来并转化为字符串
+			            String request = new String(byteBuffer.array());
+			            System.out.println("收到新数据，当前线程数：" + NIO_ServerTest.threadPoolExecutor.getActiveCount() + "，请求内容：" + request);
+			            // 清除缓冲区
+			            byteBuffer.clear();
+
+			            // 给客户端返回一串内容
+			            String response = "tony" + System.currentTimeMillis();
+			            // 放入一个缓冲区
+			            ByteBuffer wrap = ByteBuffer.wrap(response.getBytes());
+			            // 使用通道，将数据响应给客户端
+			            clientSocketChannel.write(wrap);
+			            // 清除缓冲区
+			            wrap.clear();
+			        } catch (Exception e) {
+			            e.printStackTrace();
+			        } finally {
+			            try {
+			                clientSocketChannel.configureBlocking(false);
+			                // 处理完一次请求
+			                // 继续在socket连接上，增加查询器（复用上面已有的查询器）
+			                // 查询条件和上面的一致是：OP_READ 有数据传输
+			                clientSocketChannel.register(NIO_ServerTest.selector, SelectionKey.OP_READ);
+			            } catch (IOException e) {
+			                e.printStackTrace();
+			            }
+			        }
+			    }
+
+			}
+
+		</textarea>
+
+	</p>
+
+	<p>
+		
+		呃，困了，睡觉！
+
+	</p>
+
+
+　　<p>{{ page.date | date_to_string }}</p>
