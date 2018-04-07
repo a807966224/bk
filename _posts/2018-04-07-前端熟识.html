@@ -1,0 +1,31 @@
+---
+layout: mypost
+title: 前端熟识01
+categories: [前端熟识]
+---
+　　<h2>{{ page.title }}</h2>
+　　<p>
+		Vue.js（MVVM）:数据驱动，组件化；
+		<br>
+		vue-cli脚手架：此处需要安装node，<br>
+		npm install -g vue-cli<br>
+		vue list<br>
+		vue instal webpack sell<br>
+
+		<img src="{{site.context}}/static/img/js/01.png"/><br>
+
+		这里运行成功给个截图哈，
+		cd sell<br>
+		npm run dev<br>
+		<img src="{{site.context}}/static/img/js/02.png"/><br>
+		但是这里需要说个问题，我在虚拟机上运行的服务，在外部机器无法访问vue服务，开始我以为是防火墙的原因，开了个端口为vue服务，但是依然无法访问，后来我以为是hosts文件映射的问题，检查了下并且将ip地址映射到了localhost依然无法解决，最后，发现是vue/config/index.js 的hosts配置问题，按照以下改即可使用ip地址访问！
+		<img src="{{site.context}}/static/img/js/03.png"/><br>
+		<img src="{{site.context}}/static/img/js/04.png"/><br>
+
+
+
+
+	</p>
+
+
+　　<p>{{ page.date | date_to_string }}</p>
