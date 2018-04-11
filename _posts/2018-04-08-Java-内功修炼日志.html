@@ -1,0 +1,57 @@
+---
+layout: mypost
+title: Java-内功修炼日志-21
+categories: [花把势 转 内功]
+---
+　　<p>
+		通过apache下的压力测试工具：JMeter4.0 与 Tomcat8.0 ，测试jvm不同配置参数下的GC情况。
+		<br>
+		简单介绍下JMeter工具的最简单的使用方式：
+		<img src="{{site.context}}/static/img/jvm/11.png"/><br>
+		设置并发请求参数：
+		<img src="{{site.context}}/static/img/jvm/12.png"/><br>
+		<img src="{{site.context}}/static/img/jvm/13.png"/><br>
+		设置请求地址及路径：
+		<img src="{{site.context}}/static/img/jvm/14.png"/><br>
+
+
+		tomcat设置启动参数：
+		set CATALINA_OPTS=-server -Xloggc:gc.log -XX:+PrintGCDetails -Xmx512M -Xms32M -XX:+HeapDumpOnOutOfMemoryError -XX:+UseSerialGC -XX:PermSize=32M
+		启动后，可以在bin下看到gc.log文件，用来观察gc的相关参数。
+		<br>
+
+
+
+	</p>
+
+
+	<p>
+		
+		Java 性能监控工具：<br>
+
+		1) uptime<br>
+		<img src="{{site.context}}/static/img/jvm/16.png"/><br>
+		2) top（可以知道哪个进程占用的cpu最高）<br>
+		<img src="{{site.context}}/static/img/jvm/17.png"/><br>
+		3) vmstat
+		<img src="{{site.context}}/static/img/jvm/19.png"/><br>
+		<img src="{{site.context}}/static/img/jvm/18.png"/><br>
+		4) pidstat（针对进程进行观察）
+		<br>
+		安装方式：ubuntu(sudo apt-get install sysstat)<br>
+				  centos(yum install sysstat)<br>
+		<img src="{{site.context}}/static/img/jvm/20.png"/><br>
+		5) jps<br>
+		<img src="{{site.context}}/static/img/jvm/21.png"/><br>
+		6) jinfo<br>
+		<img src="{{site.context}}/static/img/jvm/22.png"/><br>
+		<img src="{{site.context}}/static/img/jvm/23.png"/><br>
+		7) jmap<br>
+		jmap -histo 1153 > ../temp/s.txt
+		<img src="{{site.context}}/static/img/jvm/25.png"/><br>
+		<img src="{{site.context}}/static/img/jvm/24.png"/><br>
+	</p>
+
+　　<p>
+		jvm 学习 &nbsp;&nbsp;{{ page.title }}&nbsp;&nbsp;{{ page.date | date_to_string }}
+	</p>
