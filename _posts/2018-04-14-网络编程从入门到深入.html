@@ -1,0 +1,303 @@
+---
+layout: mypost
+title: 网络编程从入门到深入02
+categories: [网络编程从入门到深入]
+---
+　　<h2>{{ page.title }}</h2>
+　　<p>
+		走起！今天周六，昨天家里买了个沙发，自己抬到6楼，累的一批......<br>
+		今天我们主要是将nio的大致流程跑一遍，做到心中有数即可！<br>
+
+	</p>
+
+
+	<p>
+		
+		简述BIO的不足：阻塞点：accept()方法,read()方法，单线程；
+							<br>利用线程池实现多线程连接，性能消耗大!（一个线程只能为一个socket连接服务）
+		这里利用windows自带的工具telnet进行客户端连接测试，telnet ip port，黑屏即连接成功！
+		<img src="{{site.context}}/static/img/io/04.png"/><br>
+		<img src="{{site.context}}/static/img/io/05.png"/><br>
+
+	</p>
+
+	<p>
+		
+		简述NIO的实现方式：<br>
+		咱们先用中文描述一下（因为这对于我来说，更容易理解用JAVA编程如何实现NIO式长连接通讯）<br>
+		1)  ServerSocketChannel创建一个管道<br>
+		2)	设置管道为非阻塞状态<br>
+		3)	为管道设置端口号<br>
+		4)	获得管道管理器<br>
+		5)	将管道与管道管理器绑定，并注册其管道的事件为OP_ACCEPT<br>
+		6）	轮询检索selector中是否有符合检索状态的事件<br>
+		7)	获得检索到的事件集合<br>
+		8)	根据事件的属性进行判断，如果是OP_ACCEPT状态，则进行管道建立，并将管道注册到管道管理器中且事件为OP_READ<br>
+		9)							如果是OP_READ状态，则通过缓冲区读取信息<br>
+		整个的流程，大概是这个样，我会根据上面的简述，进行代码的编写！<br>
+		<textarea style="padding: 10px;width: 100%;height: 300px; font-family: &quot;Courier New&quot;; font-size: 12px; line-height: 1.5;">
+			package com.io.demos;
+
+			import java.io.IOException;
+			import java.net.InetSocketAddress;
+			import java.nio.ByteBuffer;
+			import java.nio.channels.SelectionKey;
+			import java.nio.channels.Selector;
+			import java.nio.channels.ServerSocketChannel;
+			import java.nio.channels.SocketChannel;
+			import java.util.Iterator;
+
+			public class NioServerTest2 {
+
+			    private static Selector selector;
+			    public static void main (String args[]) {
+
+			        try {
+			            ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
+			            serverSocketChannel.configureBlocking(false);
+			            serverSocketChannel.bind(new InetSocketAddress(9000));
+			            selector = Selector.open();
+			            serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
+
+			            while (true) {
+			                selector.select();
+			                Iterator<SelectionKey> iterator = selector.selectedKeys().iterator();
+			                while (iterator.hasNext()) {
+			                    SelectionKey key = (SelectionKey)iterator.next();
+			                    iterator.remove();
+			                    if (key.isAcceptable()) {
+			                        ServerSocketChannel serverSocketChannel1 = (ServerSocketChannel)key.channel();
+			                        SocketChannel accept = serverSocketChannel1.accept();
+			                        accept.configureBlocking(false);
+			                        accept.register(selector,SelectionKey.OP_READ);
+			                    } else if (key.isReadable()) {
+			                        SocketChannel socketChannel = (SocketChannel)key.channel();
+			                        ByteBuffer byteBuffer = ByteBuffer.allocate(1024);
+			                        int read = socketChannel.read(byteBuffer);
+
+			                        if (read > 0) {
+			                            String clientMsg = new String(byteBuffer.array());
+			                            System.out.println("客户端发送消息：" + clientMsg);
+
+			                            ByteBuffer wrap = ByteBuffer.wrap("hi".getBytes());
+			                            socketChannel.write(wrap);
+			                        } else {
+			                            System.out.println("客户端关闭了连接");
+			                            key.cancel();
+			                        }
+			                    }
+			                }
+			            }
+			        } catch (IOException e) {
+			            e.printStackTrace();
+			        }
+
+			    }
+
+			}
+
+		</textarea>
+
+
+		看，到了这里 我们的nio原理代码已经写好了，实际应用中，可能会有些许不同，但是要知道，原理都是相通的！
+	</p>
+
+	<p>
+		
+		我接下来的想法是尽力去读取netty的代码，将其一步步的写在博客里，增强自己的相应代码能力吧！
+		<br>
+		下载地址：
+		<img src="{{site.context}}/static/img/io/06.png"/><br>
+		好了，先来一篇web端基于netty4.x的基于http请求的长连接对话功能实现！<br>
+
+		为了不误人子弟，所以先把官方例子地址扔出来：https://github.com/netty/netty/blob/4.1/example/src/main/java/io/netty/example/echo/EchoServer.java
+		<br>
+		自己去找，自己去看！我使用了redis缓存了用户之间的交谈信息<br>
+		<textarea style="padding: 10px;width: 100%;height: 300px; font-family: &quot;Courier New&quot;; font-size: 12px; line-height: 1.5;">
+			package com.io.netty0;
+
+			import io.netty.bootstrap.ServerBootstrap;
+			import io.netty.channel.Channel;
+			import io.netty.channel.ChannelOption;
+			import io.netty.channel.EventLoopGroup;
+			import io.netty.channel.nio.NioEventLoopGroup;
+			import io.netty.channel.socket.nio.NioServerSocketChannel;
+			import io.netty.handler.logging.LogLevel;
+			import io.netty.handler.logging.LoggingHandler;
+			import io.netty.handler.ssl.SslContext;
+			import io.netty.handler.ssl.SslContextBuilder;
+			import io.netty.handler.ssl.util.SelfSignedCertificate;
+
+			/**
+			 * An HTTP server that sends back the content of the received HTTP request
+			 * in a pretty plaintext form.
+			 */
+			public final class HttpHelloWorldServer {
+
+			    static final boolean SSL = System.getProperty("ssl") != null;
+			    static final int PORT = Integer.parseInt(System.getProperty("port", SSL? "8443" : "8080"));
+
+			    public static void main(String[] args) throws Exception {
+			        // Configure SSL.
+			        final SslContext sslCtx;
+			        if (SSL) {
+			            SelfSignedCertificate ssc = new SelfSignedCertificate();
+			            sslCtx = SslContextBuilder.forServer(ssc.certificate(), ssc.privateKey()).build();
+			        } else {
+			            sslCtx = null;
+			        }
+
+			        // Configure the server.
+			        EventLoopGroup bossGroup = new NioEventLoopGroup(1);
+			        EventLoopGroup workerGroup = new NioEventLoopGroup();
+			        try {
+			            ServerBootstrap b = new ServerBootstrap();
+			            b.option(ChannelOption.SO_BACKLOG, 1024);
+			            b.group(bossGroup, workerGroup)
+			                    .channel(NioServerSocketChannel.class)
+			                    .handler(new LoggingHandler(LogLevel.INFO))
+			                    .childHandler(new HttpHelloWorldServerInitializer(sslCtx));
+
+			            Channel ch = b.bind(PORT).sync().channel();
+
+			            System.err.println("Open your web browser and navigate to " +
+			                    (SSL? "https" : "http") + "://127.0.0.1:" + PORT + '/');
+
+			            ch.closeFuture().sync();
+			        } finally {
+			            bossGroup.shutdownGracefully();
+			            workerGroup.shutdownGracefully();
+			        }
+			    }
+			}
+		</textarea>
+		<textarea style="padding: 10px;width: 100%;height: 300px; font-family: &quot;Courier New&quot;; font-size: 12px; line-height: 1.5;">
+			package com.io.netty0;
+
+			import io.netty.channel.ChannelInitializer;
+			import io.netty.channel.ChannelPipeline;
+			import io.netty.channel.socket.SocketChannel;
+			import io.netty.handler.codec.http.HttpServerCodec;
+			import io.netty.handler.codec.http.HttpServerExpectContinueHandler;
+			import io.netty.handler.ssl.SslContext;
+
+			public class HttpHelloWorldServerInitializer extends ChannelInitializer<SocketChannel> {
+
+			    private final SslContext sslCtx;
+
+			    public HttpHelloWorldServerInitializer(SslContext sslCtx) {
+			        this.sslCtx = sslCtx;
+			    }
+
+			    @Override
+			    public void initChannel(SocketChannel ch) {
+			        ChannelPipeline p = ch.pipeline();
+			        if (sslCtx != null) {
+			            p.addLast(sslCtx.newHandler(ch.alloc()));
+			        }
+			        p.addLast(new HttpServerCodec());
+			        p.addLast(new HttpServerExpectContinueHandler());
+			        p.addLast(new HttpHelloWorldServerHandler());
+			    }
+			}
+		</textarea>
+		<textarea style="padding: 10px;width: 100%;height: 300px; font-family: &quot;Courier New&quot;; font-size: 12px; line-height: 1.5;">
+			package com.io.netty0;
+
+			import io.netty.buffer.Unpooled;
+			import io.netty.channel.ChannelFutureListener;
+			import io.netty.channel.ChannelHandlerContext;
+			import io.netty.channel.ChannelInboundHandlerAdapter;
+			import io.netty.handler.codec.http.DefaultFullHttpResponse;
+			import io.netty.handler.codec.http.FullHttpResponse;
+			import io.netty.handler.codec.http.HttpUtil;
+			import io.netty.handler.codec.http.HttpRequest;
+			import io.netty.util.AsciiString;
+			import redis.clients.jedis.Jedis;
+
+			import static io.netty.handler.codec.http.HttpResponseStatus.*;
+			import static io.netty.handler.codec.http.HttpVersion.*;
+
+
+			/**
+			 *  个人认为这个类是进行消息处理的主要类，
+			 *  我目前想改造这个类，将这个类适用于网页端基于nosql redis进行基于http请求进行长连接对话应用，个人的想法，莫笑，当玩了！
+			 *
+			 *  实现步骤：
+			 *      1) 每个http请求过来，我们默认将http请求路径加以改造ip:port/auth=uid&xx=xx......拦截包含auth字符串的链接
+			 *      2) 将每个uid存放到redis中，（这个位置可以做成点对点的传播方式，目前我先不做吧）
+			 *          uid=1
+			 *          uid=2
+			 *      3）  http://127.0.0.1:8080/uid=1&msg=hello113
+			 *           http://127.0.0.1:8080/uid=2&msg=hello33
+			 *           哈哈  这个可能就是在搞笑  ！！！
+			 */
+			public class HttpHelloWorldServerHandler extends ChannelInboundHandlerAdapter {
+			    private static final byte[] CONTENT = { 'H', 'e', 'l', 'l', 'o', ' ', 'W', 'o', 'r', 'l', 'd' };
+
+			    private static final AsciiString CONTENT_TYPE = AsciiString.cached("Content-Type");
+			    private static final AsciiString CONTENT_LENGTH = AsciiString.cached("Content-Length");
+			    private static final AsciiString CONNECTION = AsciiString.cached("Connection");
+			    private static final AsciiString KEEP_ALIVE = AsciiString.cached("keep-alive");
+
+			    @Override
+			    public void channelReadComplete(ChannelHandlerContext ctx) {
+			        ctx.flush();
+			    }
+
+			    @Override
+			    public void channelRead(ChannelHandlerContext ctx, Object msg) {
+			        if (msg instanceof HttpRequest) {
+			            HttpRequest req = (HttpRequest) msg;
+
+			            String url = req.getUri().substring(1);
+			            Jedis jedis = new Jedis("localhost",6379);
+			            System.out.println("url:" + url);
+			            FullHttpResponse response = null;
+			            if (url.indexOf("favicon") > -1) {
+			                response = new DefaultFullHttpResponse(HTTP_1_1, OK, Unpooled.wrappedBuffer(CONTENT));
+			                response.headers().set(CONTENT_TYPE, "text/plain");
+			                response.headers().setInt(CONTENT_LENGTH, response.content().readableBytes());
+			            } else {//这个位置我们规定下url传过来的规则哈，不去判断为空的时候了
+			                String[] split = url.split("&");
+			                String str = split[0].split("=")[1];//uid
+			                String str1 = split[1].split("=")[1];//msg
+			                System.out.println("uid:" + str +",msg:" + str1);
+			                String returnStr = "";
+			                if ("1".equals(str)) {
+			                    jedis.set("uid-"+str,str1);
+			                    returnStr = jedis.get("uid-2") == null ? "" : jedis.get("uid-2");
+			                } else if ("2".equals(str)) {
+			                    jedis.set("uid-"+str,str1);
+			                    returnStr = jedis.get("uid-1") == null ? "" : jedis.get("uid-1");
+			                }
+			                response = new DefaultFullHttpResponse(HTTP_1_1, OK, Unpooled.wrappedBuffer(returnStr.getBytes()));
+			                response.headers().set(CONTENT_TYPE, "text/plain");
+			                response.headers().setInt(CONTENT_LENGTH, response.content().readableBytes());
+			            }
+
+			            boolean keepAlive = HttpUtil.isKeepAlive(req);
+
+
+			            if (!keepAlive) {
+			                ctx.write(response).addListener(ChannelFutureListener.CLOSE);
+			            } else {
+			                response.headers().set(CONNECTION, KEEP_ALIVE);
+			                ctx.write(response);
+			            }
+			        }
+			    }
+
+			    @Override
+			    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
+			        cause.printStackTrace();
+			        ctx.close();
+			    }
+			}
+		</textarea>
+		
+
+
+	</p>
+
+　　<p>{{ page.date | date_to_string }}</p>
