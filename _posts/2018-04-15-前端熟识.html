@@ -1,0 +1,57 @@
+---
+layout: mypost
+title: 前端熟识02
+categories: [前端熟识]
+---
+　　<h2>{{ page.title }}</h2>
+　　<p>
+		昨天三点多睡觉的~~~~~~
+		<br>
+		继续看下vue.js的使用！先看下目前项目的架构。由于我是在centos7.x的服务器上搭建的前台项目，所以想通过tree的方式来展示项目的树结构，嘿嘿   忘记没安装命令了 ，yum install tree稍等即可！<br>
+		<img src="{{site.context}}/static/img/js/05.png"/><br>
+		<img src="{{site.context}}/static/img/js/06.png"/><br>
+
+		由于我们写代码，常常在末尾加上;号，但是由于vue默认是不加分号的 这怎么办呢？简单的狠，首先不管咋的，你先把分号加上去，看它说啥？
+		<br>
+		<img src="{{site.context}}/static/img/js/08.png"/><br>
+		然后我们可以重新编译下代码，num run dev<br>
+		会看到以下两种错误！(以后碰到其它的，以后再说)，两种类型分别说的啥意思呢？我也不清楚，上官网瞧瞧去！
+		<img src="{{site.context}}/static/img/js/09.png"/><br>
+		semi解决方式：
+		<img src="{{site.context}}/static/img/js/10.png"/><br>
+		no-trailing-spaces解决方式：
+		<img src="{{site.context}}/static/img/js/11.png"/><br>
+		这个是我加了规则后的文件：
+		<img src="{{site.context}}/static/img/js/07.png"/><br>
+		妥了，没毛病了！继续！
+		<img src="{{site.context}}/static/img/js/12.png"/><br>
+		解决方式就是加个忽略规则的注释行！<br>
+
+		制作组件：先说流程，然后我会根据流程将过程图解出来：
+		<br>
+		1) 在components文件夹下创建如header文件夹，再去创建header.vue文件
+			<br>
+			header.vue内容模板化
+			<img src="{{site.context}}/static/img/js/14.png"/><br>
+		2) 在需要使用的文件中如：App.vue下通过import xxx引入组件文件
+		3) 在需要使用的文件中如：App.vue下通过export xxx注册组件到本页面
+
+		4) 注册之后，即可通过标签别名进行标签使用
+		<img src="{{site.context}}/static/img/js/15.png"/><br>
+
+		根据上面的描述，我会了如何自制一个组件，并且引用到项目中！接下来，我先简单学习下，如何使用router！<br>
+		甭管别的，官网先扔出来~https://router.vuejs.org
+		<br>
+		然后还是老路子：流程/实现过程...  对了   可能是由于我开始学习的时间，vue已经发展了很久....我和某某教学里的实现过程并不是完全吻合，这里我抛出下当前vue版本：2.9.3
+		<br>
+		1) 默认将路由的有关配置放在router文件夹下的index.js文件中，使用的文件中引用方式如下
+		   <img src="{{site.context}}/static/img/js/16.png"/><br>
+		2) 定义路由配置信息
+		   <img src="{{site.context}}/static/img/js/17.png"/><br>
+		3) 页面上添加引用标签与回显标签
+		   <img src="{{site.context}}/static/img/js/18.png"/><br>
+		4) 默认显示==== router.push('goods');
+	</p>
+
+
+　　<p>{{ page.date | date_to_string }}</p>
