@@ -1,0 +1,57 @@
+---
+layout: mypost
+title: Java-内功修炼日志-23
+categories: [花把势 转 内功]
+---
+　　<p>
+		今天，有点难过！今天我要把数据类型 以及 集合类型 的实现方式整理下！<br>
+
+		本来都不想睡觉了！但是由于我最近上火的狠！嘴里起泡泡了，嘴丫子也没好....还是睡吧<br>
+
+		<textarea style="padding: 10px;width: 100%;height: 300px; font-family: &quot;Courier New&quot;; font-size: 12px; line-height: 1.5;">
+			package com.zx20180416;
+
+			public class TestA {
+
+			    public static void main (String args[]) {
+
+			        //布尔型是java.lang.Object的子类    注意Boolean 类：public final class Boolean extends Object implements Serializable, Comparable<Boolean>
+			        //布尔型的hashCode就是两个值：value ? 1231 : 1237;
+			        //布尔型的封装类型   比较的是内存地址   我们看equals : 首先判断是否是Boolean类型，不是则返回flase，是则比较基本数据类型是否值相等...
+			        //布尔型的toString()方法，   首先根据 value ? "true" : "false";
+			        //布尔型的compareTo()方法，  将封装类型转化为基础数据类型，两次比较（(x == y) ? 0 : (x ? 1 : -1)）//第二次比较是比较当前比较值x.compareTo(y) x为true 返回1 x为flase返回-1
+			        Boolean flag = false;
+			        Boolean flag1 = new Boolean("true");
+			        System.out.println("Boolean是否相等常量？" + (flag == flag1) +
+			                "flag hashcode:" + flag.hashCode() + ";flag1 hashcode:" + flag1.hashCode() +
+			                ";flag equal flag1:" + (flag.equals(flag1)) + ";flag and flag toString() :" + flag.toString() + "-" + flag1.toString() +
+			                "flag compare flag1:" + flag.compareTo(true));
+
+
+			        //public final class Byte extends Number implements Comparable<Byte>
+			        //Byte的字段
+			        System.out.println("BYTES:" + Byte.BYTES + ";MAX_VALUE:" + Byte.MAX_VALUE + ";MIN_VALUE:" + Byte.MIN_VALUE + ";SIZE:" + Byte.SIZE + ";TYPE:" + Byte.TYPE);
+			        //构造方法
+			        Byte b = new Byte("50");
+			        Byte b1 = new Byte(Byte.parseByte("-123"));
+			        //compare() compareTo()就是两个值做减法
+			        //equals() 1)是否是byte类型;2)基本数据类型是否相等；
+			        //hashCode() 1）Byte.hashCode(value) 2）(int)value
+			        //Byte的从字符串转化成byte字节，都是经过转化成数字类型，然后转化成字节类型
+			        System.out.println("b:" + b + ";b1:" + b1 + ";b byteValue:" + b.byteValue() + ";b compare b1:" + Byte.compare(b,b1) +
+			                ";b compareTo b1:" + b.compareTo(b1) + ";str decode:" + Byte.decode("111") + ";b doubleValue:" + b.doubleValue() +
+			                ";b equals b1:" + b.equals(b1) + ";b hashacode:" + b.hashCode() + ";str to double:" + Byte.parseByte("111") +
+			                ";b toString():" + b.toString());
+			    }
+
+			}
+
+		</textarea>
+		
+
+
+	</p>
+
+　　<p>
+		Java基础重温！！！  &nbsp;&nbsp;{{ page.title }}&nbsp;&nbsp;{{ page.date | date_to_string }}
+	</p>
