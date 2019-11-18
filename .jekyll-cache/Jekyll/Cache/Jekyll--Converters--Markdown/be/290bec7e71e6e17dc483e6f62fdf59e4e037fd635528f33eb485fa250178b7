@@ -1,0 +1,55 @@
+I"�<blockquote>
+  <p>Scott.WDR</p>
+</blockquote>
+
+<p><img src="../readme/man.jpg" alt="s1" /></p>
+
+<h1 id="作品展示">作品展示</h1>
+
+<ul>
+  <li>
+    <p><a href="https://a807966224.github.io/">Scott.WDR-blog</a></p>
+
+    <p>你现在看到的这个博客</p>
+  </li>
+  <li>
+    <p>有待添加…</p>
+  </li>
+</ul>
+
+<h1 id="相关技能">相关技能</h1>
+
+<ul>
+  <li>
+    <p>熟练使用Java语言（C，Python）</p>
+  </li>
+  <li>
+    <p>熟练掌握HTML/CSS，能熟练手写符合W3C标准的代码</p>
+  </li>
+  <li>
+    <p>后端框架Spring，Mybatis；JFinal，Hibernate略有了解</p>
+  </li>
+  <li>
+    <p>数据库方面能熟练使用MySQL，Oracle，Sql Server</p>
+  </li>
+  <li>
+    <p>JavaScript掌握基本语法和DOM操作和Ajax操作，会用Node,jQuery,Vue</p>
+  </li>
+  <li>
+    <p>能够写一些Android小程序</p>
+  </li>
+  <li>
+    <p>能熟练使用常见算法，并用于解决问题</p>
+  </li>
+  <li>
+    <p>Linux的简单使用，各种服务的搭建</p>
+  </li>
+  <li>
+    <p>能够使用Git/SVN对代码版本进行控制</p>
+  </li>
+</ul>
+
+<video autoplay="autoplay" preload="none" controls="controls" src="/static/img/video/ilike.mp4">
+	<source type="video/mp4" src="/static/img/video/ilike.mp4" />
+</video>
+:ET

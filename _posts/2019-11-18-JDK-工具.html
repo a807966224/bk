@@ -1,0 +1,43 @@
+---
+layout: mypost
+title: JDK工具一章熟
+categories: [花把势 转 内功]
+---
+　　<p>
+	
+	<textarea style="padding: 10px;width: 100%;height: 300px; font-family: &quot;Courier New&quot;; font-size: 12px; line-height: 1.5;">
+			public class Test{
+				public static void main(String args[]) throws InterruptedException{
+				  while (true) {
+					Thread.sleep(1000);
+					System.out.println(1);
+				  }
+				}
+			  }
+	</textarea>
+
+	</p>
+
+	<p>
+		1. jps
+	</p>
+	<p>
+		2. jconsole
+	</p>
+	<p>
+		3. jstat -gcutil pid 1000
+			3.1 jstat -gc pid
+			3.2 jstat -gcnew pid
+			3.3 jstat -gcold pid
+	</p>
+	<p>
+		4. jstack pid
+	</p>
+	<p>
+		5. jmap -dump:file=fileName
+			5.1 jmap -head pid
+	</p>
+	<p>
+		6. visual VM
+	</p>
+　　<p>{{ page.date | date_to_string }}</p>
