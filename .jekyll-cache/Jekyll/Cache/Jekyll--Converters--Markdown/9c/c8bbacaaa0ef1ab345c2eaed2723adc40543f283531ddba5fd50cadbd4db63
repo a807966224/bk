@@ -1,12 +1,5 @@
----
-layout: mypost
-title: 网络安全（1）
-categories: [网络安全]
----
-
-# 系统配置
-````
-gedit /etc/apt/sources.list
+I"�<h1 id="系统配置">系统配置</h1>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gedit /etc/apt/sources.list
 #中科大源
 deb http://mirrors.ustc.edu.cn/debian stable main contrib non-free
 deb http://mirrors.ustc.edu.cn/debian stable-updates main contrib non-free
@@ -19,7 +12,7 @@ apt-get dist-upgrade
 apt-get clean
 
 dpkg -i *.deb
-apt-get update & apt-get -f install
+apt-get update &amp; apt-get -f install
 
 检查某软件是否已经安装 dpgk -l | grep '软件名称' 如 
 dpkg -l | grep 'flashplugin-nonfree'
@@ -28,10 +21,9 @@ ulimit -a
 /etc/init.d/ssh start
 查看显卡类型 	win+r 运行 dxdiag
 		      lspci |grep VGA
-````
-### 开源工具翻墙经历
-````
-apt-get install libnss3-tools
+</code></pre></div></div>
+<h3 id="开源工具翻墙经历">开源工具翻墙经历</h3>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>apt-get install libnss3-tools
 apt-get install python-gtk2
 apt-get install miredo
 ifconfig
@@ -42,19 +34,6 @@ gedit /etc/default/ufw
 最后禁用/启用防火墙来使刚刚的改动生效
 
 手动配置代理：设置-网络-VPN-手动-》
-127.0.0.1 8087即可成功访问google
-
-
-````
-
-````
-下载windows虚拟机（win7 win8 win10）：https://developer.microsoft.com/en-us/microsoft-edge/tools/vms/	
-
-下载windows软件包：https://developer.microsoft.com/zh-cn/windows	
-
-CTF社区：https://www.xctf.org.cn/
-
-下载地址：https://sourceforge.net/projects/metasploitable/files/Metasploitable2/
-官方参考地址：https://metasploit.help.rapid7.com/docs/metasploitable-2-exploitability-guide
-中文Csdn博客：https://blog.csdn.net/ztguang/article/details/51221884
-````
+127.0.0.1 8087
+</code></pre></div></div>
+:ET

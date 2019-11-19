@@ -1,0 +1,31 @@
+I"�<h1 id="系统配置">系统配置</h1>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gedit /etc/apt/sources.list
+#中科大源
+deb http://mirrors.ustc.edu.cn/debian stable main contrib non-free
+deb http://mirrors.ustc.edu.cn/debian stable-updates main contrib non-free
+#官方源
+deb http://http.kali.org/kali kali-rolling main non-free contrib
+
+apt-get update
+apt-get upgrade
+apt-get dist-upgrade
+apt-get clean
+
+dpkg -i *.deb
+apt-get update &amp; apt-get -f install
+
+检查某软件是否已经安装 dpgk -l | grep '软件名称' 如 
+dpkg -l | grep 'flashplugin-nonfree'
+
+ulimit -a
+/etc/init.d/ssh start
+</code></pre></div></div>
+<h3 id="开源工具翻墙经历">开源工具翻墙经历</h3>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>apt-get install libnss3-tools
+apt-get install python-gtk2
+apt-get install miredo
+ifconfig
+
+在结果中应该能看见一个叫 teredo 的虚拟网卡
+</code></pre></div></div>
+:ET
