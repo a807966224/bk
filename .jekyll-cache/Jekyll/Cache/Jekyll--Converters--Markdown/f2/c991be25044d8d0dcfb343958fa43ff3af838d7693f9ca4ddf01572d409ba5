@@ -1,0 +1,161 @@
+I"f<h5 id="使用移动硬盘安装kali-linux-20182系统以下是我安装流程简要">使用移动硬盘安装kali linux 2018.2系统，以下是我安装流程（简要）：</h5>
+
+<ol>
+  <li>
+    <p>使用windows管理器，将移动硬盘压缩一个空卷，作为系统的硬盘；(此处建议做，不做的话，你会发现vware会将你整个的移动硬盘占用，这导致你的移动硬盘只能做系统盘符了！)</p>
+  </li>
+  <li>使用vmware虚拟机安装系统
+    <ul>
+      <li>第一个注意点：装系统到移动硬盘里，此处需要将vmware默认提供的硬盘移除掉，进入vmware点击右下角链接移动硬盘；</li>
+      <li>第二个注意点：在分区位置，请注意硬盘大小，一定要是你空卷的大小;</li>
+    </ul>
+  </li>
+  <li>安装完成后，使用移动硬盘作为系统启动盘（参照各主板厂商不同，设置U启的方式不同，如：华硕：ESC，宏碁：F12）
+    <ul>
+      <li>由于使用虚拟机安装的kali系统，可能会莫名原因导致引导文件内容中引导盘符错误（我安装的时候出现了），出现此提示（initramfs）,原因是grub路径不对，输入blkid查看所有的列举磁盘，在其中找到type=’ext4’的区，记下/dev/sdb5 这个名字，按ctrl + del + alt重启，在启动界面参照下面的文字提示，按E编辑引导文件，找到一行linux后面….. /dev/sda5 ro 位置，将其改为刚才记下的内容 如：/dev/sdb5 rw，注意：ro改为rw，最后按F10保存后会重新使用引导文件进入系统（如果不出意外的话），出意外了的情况，我遇到了个：我使用usb转换头进行与移动硬盘的链接，这个转换头将引导文件搞成了乱码，此处提醒下各位，轻易不要使用外接工具，谁知道那鬼有问题！！！</li>
+    </ul>
+  </li>
+  <li>我是安装了有4-5次左右吧，都是可以的，主要是上面的注意点（坑），了解了应该很好通关</li>
+</ol>
+
+<hr />
+
+<h4 id="系统基础配置">系统基础配置</h4>
+
+<ol>
+  <li>更新源
+    <ul>
+      <li>leafpad /etc/apt/sources.list
+        <ul>
+          <li>deb http://http.kali.org/kali kali-rolling main non-free contrib</li>
+        </ul>
+      </li>
+      <li>apt-get update &amp; apt-get upgrade</li>
+      <li>apt-get dist-upgrade</li>
+      <li>apt-get clean</li>
+      <li>reboot</li>
+    </ul>
+  </li>
+  <li>安装google输入法（个人习惯）
+    <ul>
+      <li>apt-get install fcitx</li>
+      <li>apt-get install fcitx-googlepinyin</li>
+      <li>reboot
+        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> 搜狗官网下载deb文件
+  dpkg -i sogoupinyin_2.2.0.0108_amd64.deb
+  apt install --fix-broken
+  dpkg -i sogoupinyin_2.2.0.0108_amd64.deb
+  fcitx cofig配置下搜狗输入法
+  谷歌拼音输入法：https://www.fujieace.com/kali-linux/input.html
+</code></pre></div>        </div>
+      </li>
+    </ul>
+  </li>
+  <li>安装aptitude（这个软件包管理命令，我是觉得必须要装，因为我好多次使用apt-get install **的时候报错，都是改为aptitude install **来解决的）
+    <ul>
+      <li>apt-get install aptitude</li>
+    </ul>
+  </li>
+  <li>
+    <p>安装字体</p>
+  </li>
+  <li>安装MAVEN环境
+    <ul>
+      <li>M2_HOME=/opt/maven3</li>
+      <li>export MAVEN_OPTS=”-Xms512m -Xmx512m”</li>
+      <li>export PATH=$M2_HOME/bin:$PATH</li>
+    </ul>
+  </li>
+  <li>安装虚拟机
+    <ul>
+      <li>apt-get install virtualbox</li>
+    </ul>
+  </li>
+  <li>科学上网
+    <ol>
+      <li>下载软件，https://github.com/shadowsocks/shadowsocks/wiki/Shadowsocks-%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E</li>
+      <li>安装genpac
+        <ul>
+          <li>apt-get install python-pip</li>
+          <li>pip install genpac</li>
+        </ul>
+      </li>
+      <li>利用genpac生成pac文件，输入前确保ss处于打开状态。
+        <ul>
+          <li>genpac -p “SOCKS5 127.0.0.1:1080” –output=”autoproxy.pac”</li>
+          <li>此时会生成一个名为autoproxy.pac的文件目录为/home/xxx/, xxx为用户名</li>
+        </ul>
+      </li>
+      <li>点击电脑右上方电源键选择system settings，选择Network-&gt;Network proxy，method改为automatic，configuration URL改为
+file:///home/root/autoproxy.pac</li>
+    </ol>
+  </li>
+  <li>安装filezilla
+    <ul>
+      <li>apt-get install filezilla</li>
+    </ul>
+  </li>
+  <li>安装截图工具
+    <ul>
+      <li>apt-get install scrot
+        <ul>
+          <li>scrot:截取整个桌面</li>
+          <li>scrot -s:截取特定窗口或矩形区域</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>安装jdk8
+    <ul>
+      <li>官网下载：https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html</li>
+      <li>update-alternatives –config javac</li>
+      <li>update-alternatives –install /usr/bin/java java /opt/jdk1.8.0_211/bin/java 3</li>
+    </ul>
+  </li>
+  <li>安装Node</li>
+  <li>安装ZooKeeper
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>官网下载：http://mirror.bit.edu.cn/apache/zookeeper/zookeeper-3.5.5/
+tar -zxvf apache-zookeeper-3.5.5-bin.tar.gz
+mv apache-zookeeper-3.5.5-bin /opt
+cd apache-zookeeper-3.5.5-bin/
+mkdir data
+cd conf/
+cp zoo_sample.cfg zoo.cfg
+leafpad zoo.cfg
+修改dataDir路径地址
+./zkServer.sh status
+./zkServer.sh start
+./zkCli.sh
+./zkServer.sh stop
+修改：zoo.cfg中增加admin.serverPort=没有被占用的端口号
+</code></pre></div>    </div>
+  </li>
+  <li>安装Mysql客户端
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>官网下载：https://dev.mysql.com/downloads/file/?id=485463
+dpkg -i mysql-workbench-community_8.0.16-1ubuntu18.04_amd64.deb
+apt install -f
+dpkg -i mysql-workbench-community_8.0.16-1ubuntu18.04_amd64.deb
+</code></pre></div>    </div>
+  </li>
+  <li>安装redis客户端工具
+    <ul>
+      <li>github下载：https://github.com/cc20110101/RedisView解压运行即可</li>
+    </ul>
+  </li>
+  <li>安装Postman</li>
+</ol>
+
+<h4 id="系统资源">系统资源</h4>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>下载windows虚拟机（win7 win8 win10）：https://developer.microsoft.com/en-us/microsoft-edge/tools/vms/	
+
+下载windows软件包：https://developer.microsoft.com/zh-cn/windows	
+
+CTF社区：https://www.xctf.org.cn/
+
+下载地址：https://sourceforge.net/projects/metasploitable/files/Metasploitable2/
+官方参考地址：https://metasploit.help.rapid7.com/docs/metasploitable-2-exploitability-guide
+中文Csdn博客：https://blog.csdn.net/ztguang/article/details/51221884
+</code></pre></div></div>
+
+<p>18 Nov 2019</p>
+:ET

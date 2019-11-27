@@ -1,0 +1,8 @@
+I"h<ol>
+  <li>探测服务信息
+    <ul>
+      <li>nc -nv targetIp 6499</li>
+    </ul>
+  </li>
+</ol>
+:ET

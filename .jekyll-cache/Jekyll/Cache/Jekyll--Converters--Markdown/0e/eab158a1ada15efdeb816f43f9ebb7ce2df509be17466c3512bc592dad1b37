@@ -1,0 +1,32 @@
+I"�<ol>
+  <li>探测服务信息
+    <ul>
+      <li>nc -nv targetIp 6499</li>
+    </ul>
+  </li>
+  <li>传输文本信息（电子取证信息收集）
+    <ul>
+      <li>nc -lp 6499</li>
+      <li>nc -lp targetIp 6499</li>
+    </ul>
+  </li>
+  <li>传输文件
+    <ol>
+      <li>正向（向目标机器传输文件）
+        <ul>
+          <li>nc -lp 6499 &gt; test.txt</li>
+          <li>nc -nv targetIp 6499 &lt; test.txt -q 1</li>
+        </ul>
+      </li>
+      <li>反向（从目标机器下载文件）
+        <ul>
+          <li>nc -lp 6499 -q 1 &lt; test.txt</li>
+          <li>nc -nv targetIp 6499 &gt; test.txt</li>
+        </ul>
+      </li>
+    </ol>
+  </li>
+</ol>
+
+<p>21 Nov 2019</p>
+:ET
