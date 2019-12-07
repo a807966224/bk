@@ -1,0 +1,102 @@
+I"g
+<ol>
+  <li>传输层（TCP UDP）</li>
+</ol>
+
+<table>
+  <thead>
+    <tr>
+      <th> </th>
+      <th style="text-align: center">可靠连接</th>
+      <th style="text-align: center">不可靠连接</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Connection Type</td>
+      <td style="text-align: center">Connection-oriented</td>
+      <td style="text-align: center">Connectionless</td>
+    </tr>
+    <tr>
+      <td>Protocol</td>
+      <td style="text-align: center">TCP</td>
+      <td style="text-align: center">UDP</td>
+    </tr>
+    <tr>
+      <td>Sequencing连续</td>
+      <td style="text-align: center">YES</td>
+      <td style="text-align: center">NO</td>
+    </tr>
+    <tr>
+      <td>Uses</td>
+      <td style="text-align: center">email/file sharing/downloading</td>
+      <td style="text-align: center">Voice streaming/Video streaming</td>
+    </tr>
+  </tbody>
+</table>
+
+<ul>
+  <li>Protocol
+    <ul>
+      <li>1:icmp</li>
+      <li>2:ichmp</li>
+      <li>6: tcp</li>
+      <li>7:udp</li>
+      <li>89:ostf</li>
+    </ul>
+  </li>
+  <li>端口
+    <ul>
+      <li>21： FTP：TCP</li>
+      <li>23： TELNET：TCP</li>
+      <li>80： HTTP：TCP</li>
+      <li>53： DNS：TCP</li>
+      <li>69： TFTP： UDP</li>
+      <li>161： SNMP： UDP</li>
+    </ul>
+  </li>
+</ul>
+
+<ol>
+  <li>UDP头部
+    <ol>
+      <li>16 bit Source port</li>
+      <li>16 bit dest port</li>
+      <li>16 bit udp length</li>
+      <li>16 bit udp checksum</li>
+      <li>data</li>
+    </ol>
+  </li>
+  <li>TCP头部
+    <ol>
+      <li>16 bit source port</li>
+      <li>16 bit dest port</li>
+      <li>32 bit Sequence num 序列号</li>
+      <li>32 bit Acknowledgment num 确认号</li>
+      <li>4 bit header length + resv + ns + cwr + ece + urg + ack + psh + rst + syn + fin</li>
+      <li>16 bit windows size 窗口大小</li>
+      <li>16 bit TCP checksum 校验和</li>
+      <li>16 bit urgent pointer 紧急指针</li>
+      <li>options 选项</li>
+      <li>data</li>
+    </ol>
+  </li>
+  <li>三次握手
+    <ol>
+      <li>host1 -&gt;(send syn;seq = 100 ctl = syn) host2</li>
+      <li>host2 -&gt;(syn received send syn,ack;seq = 300,ack=101, ctl = syn,ack) host1</li>
+      <li>host1 -&gt;(established seq=101, ack=301,ctl=ack) host2</li>
+      <li>ctl指的是头部中控制字段的对应bit被设置为1</li>
+      <li>流量控制；可能同时发三个包过去，但是对方由于缓冲区、网卡等原因，只能接收1个包，那么下次发送剩下未发送成功的包；</li>
+      <li>window size
+        <ol>
+          <li>固定窗口</li>
+          <li>滑动窗口</li>
+        </ol>
+      </li>
+    </ol>
+  </li>
+</ol>
+
+<p>21 Nov 2019</p>
+:ET

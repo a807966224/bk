@@ -1,0 +1,105 @@
+I"$<ol>
+  <li>安全基本属性与分类
+    <ol>
+      <li>保密性
+        <ol>
+          <li>网络监控，肩窥，社交工程，盗取密码</li>
+        </ol>
+      </li>
+      <li>完整性
+        <ol>
+          <li>病毒，逻辑炸弹，误删</li>
+        </ol>
+      </li>
+      <li>可用性
+        <ol>
+          <li>拒绝服务DDOS攻击，自然或人为损坏</li>
+        </ol>
+      </li>
+    </ol>
+  </li>
+  <li>防火墙
+    <ol>
+      <li>默认端口预览
+        <ol>
+          <li>注册端口
+            <ol>
+              <li>0-1023：由IANA控制，为已知服务保留</li>
+              <li>1024-49151：由IANA列出的已注册的端口，由普通用户执行的普通用户进程或程序可以使用的这些端口</li>
+            </ol>
+          </li>
+        </ol>
+      </li>
+    </ol>
+  </li>
+</ol>
+
+<table>
+  <thead>
+    <tr>
+      <th>服务</th>
+      <th>端口</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>FTP</td>
+      <td>21</td>
+    </tr>
+    <tr>
+      <td>SSH</td>
+      <td>22</td>
+    </tr>
+    <tr>
+      <td>TELNET</td>
+      <td>23</td>
+    </tr>
+    <tr>
+      <td>DHCP SERVER</td>
+      <td>67</td>
+    </tr>
+    <tr>
+      <td>POP3/SMTP</td>
+      <td>110/25</td>
+    </tr>
+    <tr>
+      <td>DNS</td>
+      <td>53</td>
+    </tr>
+    <tr>
+      <td>HTTP</td>
+      <td>80</td>
+    </tr>
+    <tr>
+      <td>NETBIOS</td>
+      <td>139</td>
+    </tr>
+    <tr>
+      <td>MYSQL</td>
+      <td>3306</td>
+    </tr>
+    <tr>
+      <td>ORACLE</td>
+      <td>1521</td>
+    </tr>
+    <tr>
+      <td>SQL</td>
+      <td>1433</td>
+    </tr>
+    <tr>
+      <td>TOMCAT</td>
+      <td>8080</td>
+    </tr>
+    <tr>
+      <td>RPC</td>
+      <td>3389</td>
+    </tr>
+    <tr>
+      <td>H.323</td>
+      <td>端口群</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>21 Nov 2019</p>
+:ET

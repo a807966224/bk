@@ -1,0 +1,77 @@
+I"<h3 id="网络协议-ip">网络协议 IP</h3>
+<ol>
+  <li>IP地址
+    <ol>
+      <li>自动获取（公共场所）</li>
+      <li>静态IP（办公场所）</li>
+    </ol>
+  </li>
+  <li>点分法（二进制转换）</li>
+  <li>IP地址分类
+    <ol>
+      <li>a类：0xxxxxxx.HOST.HOST.HOST
+        <ul>
+          <li>1-126开头</li>
+          <li>127 环回测试</li>
+        </ul>
+      </li>
+      <li>b类：10xxxxxx.NETWORK.HOST.HOST
+        <ol>
+          <li>128-191开头 （65534）</li>
+        </ol>
+      </li>
+      <li>c类：110xxxxx.NETWORK.NETWORK.HOST
+        <ol>
+          <li>192-223开头  （254）</li>
+        </ol>
+      </li>
+      <li>D类：224-239 组播</li>
+      <li>E类：240-254 研究用</li>
+    </ol>
+  </li>
+  <li>公有IP地址-互联网
+    <ol>
+      <li>A类
+        <ul>
+          <li>1.0.0.0 to 9.255.255.255</li>
+          <li>11.0.0.0 to 126.255.255</li>
+        </ul>
+      </li>
+      <li>B类
+        <ul>
+          <li>128.0.0.0 to 172.15.255.255</li>
+          <li>172.32.0.0 to 191.255.255.255</li>
+        </ul>
+      </li>
+      <li>C类
+        <ul>
+          <li>192.0.0.0 to 192.167.255.255</li>
+          <li>192.169.0.0 to 223.255.255.255</li>
+        </ul>
+      </li>
+      <li>扣除上面的公有网络
+        <ol>
+          <li>A类：10.0.0.0 to 10.255.255.255</li>
+          <li>B类：172.16.0.0 to 172.31.255.255</li>
+          <li>C类：192.168.0.0 to 192.168.255.255</li>
+        </ol>
+      </li>
+    </ol>
+  </li>
+  <li>DHCP
+    <ol>
+      <li>客户端 -&gt;（DHCP client broadcasts discover message） 服务端</li>
+      <li>服务端 -&gt;(DHCP server broadcasts offer message) 客户端</li>
+      <li>客户端 -&gt;(DHCP client responds with request message) 服务端</li>
+      <li>服务端 -&gt;(DHCP server finalizes the exchange with ackwnowledgment message) 客户端</li>
+    </ol>
+  </li>
+  <li>DNS（域名解析）
+    <ul>
+      <li>TCP/IP协议栈的一种应用，将IP翻译成易于人类识别的地址</li>
+    </ul>
+  </li>
+</ol>
+
+<p>21 Nov 2019</p>
+:ET

@@ -1,0 +1,51 @@
+I"{<ol>
+  <li>实验目的：掩码下同网段地址可否ping通
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> 电脑在同一个VLAN内，注意掩码
+ 交换机地址：192.168.32.1 255.255.240.0
+ 电脑0地址：192.168.33.1 255.255.240.0
+ 电脑1地址：192.168.34.1 255.255.240.0
+
+ 掩码决定了网段的大小
+</code></pre></div>    </div>
+  </li>
+  <li>2950-24 交换机 IOS命令
+    <ol>
+      <li>en 进行特权模式
+        <ol>
+          <li>关闭域名解析：no ip domain-lookup</li>
+        </ol>
+      </li>
+      <li>快捷键
+        <ol>
+          <li>ctrl +a</li>
+          <li>ctrl +e</li>
+          <li>ctrl +f</li>
+          <li>ctrl +b</li>
+          <li>show his + tab</li>
+          <li>show ?</li>
+        </ol>
+      </li>
+      <li>show history</li>
+      <li>clock ? =&gt; clock</li>
+      <li>RAM：正在执行的文件，重启丢失
+        <ol>
+          <li>show running-config</li>
+        </ol>
+      </li>
+      <li>NVRAM：保存后的文件，重启不会丢失
+        <ol>
+          <li>show star</li>
+        </ol>
+      </li>
+      <li>FLASH：放IOS，启动后放入RAM中</li>
+      <li>show running-config</li>
+      <li>reload</li>
+      <li>本地端口连接交换机</li>
+      <li>网络端口连接交换机</li>
+      <li>拨号模式连接交换机</li>
+    </ol>
+  </li>
+</ol>
+
+<p>21 Nov 2019</p>
+:ET

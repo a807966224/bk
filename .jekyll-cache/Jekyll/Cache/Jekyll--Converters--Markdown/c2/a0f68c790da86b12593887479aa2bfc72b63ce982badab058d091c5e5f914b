@@ -1,0 +1,120 @@
+I"Y<ol>
+  <li>思科交换机
+    <ol>
+      <li>思科IOS交换机的启动应该检查物理安装、上电、然后在Console口连接的终端上查看思科IOS软件的输出信息</li>
+      <li>思科IOS交换机上有不同的LED指示灯，当交换机工作正常时通常显示绿色，若显示琥珀色则标识异常</li>
+      <li>思科Catalyst交换机的加电自检（POST）只在设备上电上进行</li>
+      <li>在初始化过程中，若加电自检（POST）检测到故障，会将故障信息输出到控制台（Console）;若POST成功，则交换机正常启动</li>
+      <li>Catalyst IOS 交换机能够在全局配置模式和其他配置模式下进行配置，与路由器类似
+        <ol>
+          <li>特权模式：enable/en</li>
+          <li>全局配置：configure terminal/conf t</li>
+          <li>配置交换机管理IP：int vlan 1
+            <ol>
+              <li>ip address 10.5.5.1 255.255.255.0</li>
+              <li>no shutdown</li>
+            </ol>
+          </li>
+          <li>保存至硬盘：copy run star</li>
+          <li>重启：reload</li>
+        </ol>
+      </li>
+      <li>查看交换机信息
+        <ol>
+          <li>show version</li>
+          <li>show run</li>
+          <li>show int</li>
+        </ol>
+      </li>
+      <li>升级交换机IOS
+        <ol>
+          <li>TFTP服务器</li>
+          <li>copy tftp: flash:</li>
+          <li>dir</li>
+          <li>conf t</li>
+          <li>boot manage</li>
+          <li>reload</li>
+        </ol>
+      </li>
+      <li>密码设置
+        <ol>
+          <li>Console设置
+            <ol>
+              <li>进入全局配置模式：conf t</li>
+              <li>line console 0</li>
+              <li>设置明文密码：password 1234</li>
+              <li>show run 查看设置</li>
+              <li>copy run star 保存设置</li>
+            </ol>
+          </li>
+          <li>VTY 设置
+            <ol>
+              <li>conf t</li>
+              <li>设置五个可远程telnet登录用户：line vty 0 4</li>
+              <li>设置明文密码：password 1234</li>
+              <li>查看设置 show run</li>
+            </ol>
+          </li>
+          <li>开启加密服务：service password-encryption，后续口令被加密</li>
+          <li>进入特权模式设置加密密码
+            <ol>
+              <li>conf t</li>
+              <li>enable secret 1234</li>
+            </ol>
+          </li>
+          <li>远程客户端如果忘记telnet密码，只能在接触到交换机的情况下修改密码
+            <ol>
+              <li>对于思科 2900 3500交换机密码重置过程
+                <ol>
+                  <li>按下MODE键不放，开机，直到system led灯不再闪烁，释放MODE</li>
+                  <li>这时交换机进入boot模式，出现提示符三个选项</li>
+                  <li>输入：flash_init,开始初始化flash</li>
+                  <li>输入：load_helper</li>
+                  <li>输入：dir flash, 查看flash内容</li>
+                  <li>输入：rename flash: config.txt flash:config.old，重新命名配置文件</li>
+                  <li>输入：boot 重启交换机，好比是无配置参数的交换机</li>
+                  <li>在continue with configuration dialog?[yes/no] 输入 n</li>
+                  <li>在提示符下 输入 enable 进入特权模式，重新设置密码：enable password</li>
+                  <li>输入命令：rename flash:config.old flash:config.txt(恢复配置文件)</li>
+                  <li>copy flash:config.txt system:running-config(保存配置文件)</li>
+                  <li>妥</li>
+                </ol>
+              </li>
+            </ol>
+          </li>
+        </ol>
+      </li>
+      <li>交换式局域网提供微分段（即一个网络分段中的每个设备直接连接到交换机的端口并独享带宽）
+        <ol>
+          <li>在以太局域网中，半双工通信在同一个时间只能进行单向数据传输，全双工通信则允许同时进行数据传输，交换机提供全双工通信特性</li>
+          <li>在园区网络中，采用层次型的以太网拓扑通常是最有效的部署方式，在接入层，汇聚层，骨干层可以采用快速以太网，吉比特以太网技术</li>
+          <li>配置半双工、全双工
+            <ol>
+              <li>enable</li>
+              <li>conf t</li>
+              <li>int f0/1</li>
+              <li>duplex full(全双工)、half(半双工)</li>
+              <li>设置速率 speed 100</li>
+              <li>show int f0/1</li>
+            </ol>
+          </li>
+          <li>由于可能会出现环路的交换机，会造成广播风暴、MAC地址表错误，所以尽可能使用生成树协议（STP）spanning-tree portfast</li>
+        </ol>
+      </li>
+      <li>交换机排查问题
+        <ol>
+          <li>线缆损坏</li>
+          <li>出现新的电磁干扰源</li>
+          <li>show int f0/1
+            <ol>
+              <li>介质问题</li>
+              <li>双工问题</li>
+              <li>速率问题</li>
+            </ol>
+          </li>
+        </ol>
+      </li>
+    </ol>
+  </li>
+</ol>
+:ET

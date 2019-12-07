@@ -1,0 +1,80 @@
+I"�<ol>
+  <li>安全基本属性与分类
+    <ol>
+      <li>保密性
+        <ol>
+          <li>网络监控，肩窥，社交工程，盗取密码</li>
+        </ol>
+      </li>
+      <li>完整性
+        <ol>
+          <li>病毒，逻辑炸弹，误删</li>
+        </ol>
+      </li>
+      <li>可用性
+        <ol>
+          <li>拒绝服务DDOS攻击，自然或人为损坏</li>
+        </ol>
+      </li>
+    </ol>
+  </li>
+  <li>防火墙
+    <ol>
+      <li>默认端口预览</li>
+    </ol>
+  </li>
+</ol>
+
+<table>
+  <thead>
+    <tr>
+      <th>服务</th>
+      <th>端口</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>FTP</td>
+      <td>21</td>
+    </tr>
+    <tr>
+      <td>SSH</td>
+      <td>22</td>
+    </tr>
+    <tr>
+      <td>TELNET</td>
+      <td>23</td>
+    </tr>
+    <tr>
+      <td>DHCP SERVER</td>
+      <td>67</td>
+    </tr>
+    <tr>
+      <td>POP3/SMTP</td>
+      <td>110/25</td>
+    </tr>
+    <tr>
+      <td>DNS</td>
+      <td>53</td>
+    </tr>
+    <tr>
+      <td>FTP</td>
+      <td>21</td>
+    </tr>
+    <tr>
+      <td>FTP</td>
+      <td>21</td>
+    </tr>
+    <tr>
+      <td>FTP</td>
+      <td>21</td>
+    </tr>
+    <tr>
+      <td>FTP</td>
+      <td>21</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>21 Nov 2019</p>
+:ET

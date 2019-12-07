@@ -1,0 +1,15 @@
+I"<ol>
+  <li>ARP(Address resolution protocol)地址解析协议
+    <ol>
+      <li>A 广播 局域网内所有机器，通过目标机器的IP地址，查询目标机器的MAC地址；IP-》MAC</li>
+    </ol>
+  </li>
+  <li>RARP(Reverse Address Resolution Protocol)反向地址解析协议
+    <ol>
+      <li>从ARP表或者缓存上请求其IP地址；MAC-&gt;IP</li>
+    </ol>
+  </li>
+  <li>命令：arp -a ，查看系统arp缓存</li>
+  <li>命令：tracert destIp，查看到达目标IP经过的路由器</li>
+</ol>
+:ET
