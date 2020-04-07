@@ -28,10 +28,12 @@ categories: [网络安全]
 	*  apt-get dist-upgrade 
 	*  apt-get clean 
     *  reboot 
-2. 安装google输入法（个人习惯）
+2. 安装google输入法（个人习惯，补充：https://ywnz.com/linuxjc/2891.html）
     * apt-get install fcitx
     * apt-get install fcitx-googlepinyin
+    * im-config(输入法配置，注意点选择fcitx，其他全部ok)
     * reboot
+    * fcitx-config-gtk3，添加google-pinyin输入法，ctrl+space即可切换输入法
     ````
     搜狗官网下载deb文件
         dpkg -i sogoupinyin_2.2.0.0108_amd64.deb
@@ -47,7 +49,7 @@ categories: [网络安全]
 
 5. 安装MAVEN环境
     * M2_HOME=/opt/maven3
-    * export MAVEN_OPTS="-Xms512m -Xmx512m" 
+    * export MAVEN_OPTS="-Xms256m -Xmx512m"
     * export PATH=$M2_HOME/bin:$PATH
 
 6. 安装虚拟机
